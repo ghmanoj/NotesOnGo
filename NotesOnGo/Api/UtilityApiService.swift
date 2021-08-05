@@ -20,14 +20,35 @@ class UtilityApiService {
 	}
 	
 	func performAction(actionType: UtilityActionType, completion: @escaping(Result<Data, NetworkError>) -> Void) {
-		let apiUrl = "http://\(UtilityApiService.apiEndPoint):8081/" + actionTypeToEndPoint(action: actionType)
-
+		let apiUrl = "http://\(UtilityApiService.apiEndPoint):8081/utilities_local"
+		
 		guard let url = URL(string: apiUrl) else {
 			completion(.failure(.badURL))
 			return
 		}
+		
 
-		URLSession.shared.dataTask(with: url) { data, response, error in
+		
+		var jsonData: Data?
+		
+		do {
+			let message = actionToCommandMessage(action: actionType)
+			jsonData = try JSONSerialization.data(withJSONObject: message.getDict(), options: .prettyPrinted)
+		} catch {
+			print("Error \(error)")
+			completion(.failure(.messageError))
+			return
+		}
+		
+		var request = URLRequest(url: url)
+	
+		//HTTP Headers
+		request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+		request.setValue("application/json", forHTTPHeaderField: "Accept")
+		request.httpMethod = "POST"
+		request.httpBody = jsonData
+
+		URLSession.shared.dataTask(with: request) { data, response, error in
 			if let data = data {
 				completion(.success(data))
 			} else if error != nil {
@@ -38,14 +59,14 @@ class UtilityApiService {
 		}.resume()
 	}
 	
-	private func actionTypeToEndPoint(action: UtilityActionType) -> String {
+	private func actionToCommandMessage(action: UtilityActionType) -> CommandMessage {
 		switch action {
 			case .logout:
-				return "utility"
-			case .screenlock:
-				return "utility"
+				return CommandMessage(command: "utility", modifier: "logout")
+			case .lock:
+				return CommandMessage(command: "utility", modifier: "lock")
 			case .status:
-				return "uptime"
+				return CommandMessage(command: "system", modifier: "status")
 		}
 	}
 }

@@ -169,7 +169,25 @@ struct TakeNoteView: View {
 						print("failure \(error)")
 				}
 			}
-		} else if tmpTokens.contains("uptime") {
+		} else if tmpTokens.contains("utility") && tmpTokens.contains("lock") {
+			 utilityApiService.performAction(actionType: .lock) { result in
+				 switch result {
+					 case .success(let data):
+						 let decoder = JSONDecoder()
+						 decoder.keyDecodingStrategy = .convertFromSnakeCase
+						 do {
+							 let message = try decoder.decode(ResponseMessage.self, from: data)
+							 
+							 DispatchQueue.main.async { self.noteContent = message.message }
+							 
+						 } catch {
+							 print("\(error)")
+						 }
+					 case .failure(let error):
+						 print("failure \(error)")
+				 }
+			 }
+		} else if tmpTokens.contains("system") && tmpTokens.contains("status") {
 			utilityApiService.performAction(actionType: .status) { result in
 				switch result {
 					case .success(let data):

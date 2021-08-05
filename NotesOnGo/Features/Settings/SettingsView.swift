@@ -20,7 +20,7 @@ struct SettingsView: View {
 	private let availableDevCommands = [
 		"Command: utility, Modifier: logout",
 		"Command: utility, Modifier: lock",
-		"Command: system, Modifier: uptime"
+		"Command: system, Modifier: status"
 	]
 	
 	var body: some View {
