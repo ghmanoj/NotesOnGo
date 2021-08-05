@@ -41,9 +41,7 @@ struct TakeNoteView: View {
 			}
 			.font(.caption2)
 			.foregroundColor(.secondary)
-			
-			Spacer(minLength: 0)
-			
+						
 			if orientation == .portrait
 					|| orientation == .portraitUpsideDown
 					|| orientation == .unknown
@@ -123,11 +121,9 @@ struct TakeNoteView: View {
 						Text(noteTitle)
 						Text(noteContent)
 					}
-					.font(.title3)
+					.font(.body)					
 				}
-
 			}
-			Spacer(minLength: 0)
 		}
 		.onRotate { newOrientation in
 			orientation = newOrientation
