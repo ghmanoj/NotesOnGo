@@ -25,7 +25,7 @@ struct TakeNoteView: View {
 	let speechRecognizer = SpeechRecognizer(greetingMessage: "Please start recording...")
 	
 	var body: some View {
-		VStack {
+		VStack(spacing: 15) {
 			
 			VStack(alignment: .leading, spacing: 3) {
 				HStack {
