@@ -9,18 +9,36 @@ import SwiftUI
 
 // MARK: - Settings View
 struct SettingsView: View {
-	@ObservedObject var viewModel = SettingsViewModel()
-
 	@AppStorage("isDarkMode") var isDarkMode: Bool = true
 	
+	@ObservedObject private var viewModel = SettingsViewModel()
+	
+	@State private var isDevCommand: Bool = false
+	
+	@State private var seperator = "\n"
+	
+	private let availableDevCommands = [
+		"Command: utility, Modifier: logout",
+		"Command: utility, Modifier: lock",
+		"Command: system, Modifier: uptime"
+	]
+	
 	var body: some View {
-		VStack(alignment: .leading) {
+		VStack(alignment: .leading, spacing: 20) {
 			
 			Toggle("Dark Mode", isOn: $isDarkMode)
 				.font(.title2)
 			
-			Spacer(minLength: 0)
+			Toggle("Dev. Cmds", isOn: $isDevCommand)
+				.font(.title2)
+
+			Text(isDevCommand ? availableDevCommands.joined(separator: seperator) : "")
+				.frame(minHeight: 20)
+				.foregroundColor(.red.opacity(0.9))
+				.font(.footnote)
 			
+			Spacer(minLength: 0)
+
 			VStack(alignment: .leading, spacing: 10) {
 				HStack(spacing: 10) {
 					Text("Api End Point")
@@ -45,6 +63,15 @@ struct SettingsView: View {
 			}
 			.onAppear {
 				viewModel.fetchLatest()
+			}
+		}
+		.onRotate { orientation in
+			if orientation == .portrait
+					|| orientation == .portraitUpsideDown
+					|| orientation == .unknown {
+				seperator = "\n"
+			} else {
+				seperator = " | "
 			}
 		}
 		.padding()

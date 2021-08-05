@@ -9,5 +9,5 @@ import Foundation
 
 
 enum LayoutType {
-	case takenote, history, settings, goodies
+	case takenote, history, settings //, goodies
 }

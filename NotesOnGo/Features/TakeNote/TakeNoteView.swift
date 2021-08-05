@@ -18,58 +18,122 @@ struct TakeNoteView: View {
 	@State var noteTitle = ""
 	@State var noteContent = ""
 	
+	@State private var orientation = UIDeviceOrientation.unknown
+	
 	private let utilityApiService = UtilityApiService()
 	
 	let speechRecognizer = SpeechRecognizer(greetingMessage: "Please start recording...")
 	
 	var body: some View {
 		VStack {
+			
+			VStack(alignment: .leading, spacing: 3) {
+				HStack {
+					Image(systemName: "megaphone")
+						.rotationEffect(.degrees(-45))
+					Text("Title [title of the note]")
+				}
+				HStack {
+					Image(systemName: "megaphone")
+						.rotationEffect(.degrees(-45))
+					Text("Content [content of the note]")
+				}
+			}
+			.font(.caption2)
+			.foregroundColor(.secondary)
+			
 			Spacer(minLength: 0)
 			
-			ZStack {
-				Text(errorMessage)
-					.offset(y: -200)
+			if orientation == .portrait
+					|| orientation == .portraitUpsideDown
+					|| orientation == .unknown
+					|| orientation == .faceDown
+					|| orientation == .faceUp {
 				
-				Image(systemName: "mic.fill")
-					.resizable()
-					.aspectRatio(contentMode: .fit)
-					.foregroundColor(isRecording ? .green : .red)
-					.frame(height: 80)
-					.onTapGesture {
-						errorMessage = ""
-						noteTitle = ""
-						noteContent = ""
-
-						if isRecording {
-							speechRecognizer.stopRecording()
-							isRecording = false
+				VStack(spacing: 40) {
+					Text(errorMessage)
+						.frame(height: 20)
+					
+					Image(systemName: "mic.fill")
+						.resizable()
+						.aspectRatio(contentMode: .fit)
+						.foregroundColor(isRecording ? .green : .red)
+						.frame(height: 80)
+						.onTapGesture {
+							errorMessage = ""
+							noteTitle = ""
+							noteContent = ""
 							
-							parseRecording()
-							
-						} else {
-							recording = ""
-							isRecording = true
-							speechRecognizer.record(to: $recording)
+							if isRecording {
+								speechRecognizer.stopRecording()
+								isRecording = false
+								
+								parseRecording()
+								
+							} else {
+								recording = ""
+								isRecording = true
+								speechRecognizer.record(to: $recording)
+							}
 						}
+					
+					Text(recording)
+						.font(.title3)
+						.frame(height: 20)
+					
+					VStack(alignment: .leading) {
+						Text(noteTitle)
+						Text(noteContent)
 					}
-				
-				Text(recording)
 					.font(.title3)
-					.offset(y: 100)
-				
-				VStack(alignment: .leading) {
-					Text(noteTitle)
-					Text(noteContent)
 				}
-				.font(.title3)
-				.offset(y:200)
-				
+			} else {
+				HStack(spacing: 40) {
+					Text(errorMessage)
+						.frame(height: 20)
+					
+					Image(systemName: "mic.fill")
+						.resizable()
+						.aspectRatio(contentMode: .fit)
+						.foregroundColor(isRecording ? .green : .red)
+						.frame(height: 80)
+						.onTapGesture {
+							errorMessage = ""
+							noteTitle = ""
+							noteContent = ""
+							
+							if isRecording {
+								speechRecognizer.stopRecording()
+								isRecording = false
+								
+								parseRecording()
+								
+							} else {
+								recording = ""
+								isRecording = true
+								speechRecognizer.record(to: $recording)
+							}
+						}
+					
+					Text(recording)
+						.font(.title3)
+						.frame(height: 20)
+					
+					VStack(alignment: .leading) {
+						Text(noteTitle)
+						Text(noteContent)
+					}
+					.font(.title3)
+				}
+
 			}
-			.offset(y: -100)
-			
 			Spacer(minLength: 0)
 		}
+		.onRotate { newOrientation in
+			orientation = newOrientation
+		}
 	}
+	
 	
 	private func parseRecording() {
 		let tokens = recording.split(separator: " ")
@@ -125,6 +189,7 @@ struct TakeNoteView: View {
 			}
 		} else {
 			errorMessage = "Please specify note title and content"
+			recording = ""
 		}
 	}
 	
