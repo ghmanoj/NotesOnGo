@@ -27,10 +27,6 @@ struct NavButton: View {
 					generateHepaticFeedback()
 					layoutType = type
 				}
-//			Rectangle()
-//				.frame(width: 30, height: 2)
-//				.foregroundColor((layoutType == type) ? .red : .secondary)
-			
 			Text(label)
 				.font(.callout)
 		}

@@ -18,11 +18,9 @@ struct TakeNoteView: View {
 	@State var noteTitle = ""
 	@State var noteContent = ""
 	
-	@State private var orientation = UIDeviceOrientation.unknown
+	private let utilityApiService = ObjectUtils.utilityApiService
 	
-	private let utilityApiService = UtilityApiService()
-	
-	let speechRecognizer = SpeechRecognizer(greetingMessage: "Please start recording...")
+	let speechRecognizer = SpeechRecognizer(greetingMessage: "Start speaking....")
 	
 	var body: some View {
 		VStack(spacing: 15) {
@@ -41,92 +39,44 @@ struct TakeNoteView: View {
 			}
 			.font(.caption2)
 			.foregroundColor(.secondary)
-						
-			if orientation == .portrait
-					|| orientation == .portraitUpsideDown
-					|| orientation == .unknown
-					|| orientation == .faceDown
-					|| orientation == .faceUp {
+			
+			VStack(spacing: 40) {
+				Text(errorMessage)
+					.frame(height: 50)
 				
-				VStack(spacing: 40) {
-					Text(errorMessage)
-						.frame(height: 20)
-					
-					Image(systemName: "mic.fill")
-						.resizable()
-						.aspectRatio(contentMode: .fit)
-						.foregroundColor(isRecording ? .green : .red)
-						.frame(height: 80)
-						.onTapGesture {
-							errorMessage = ""
-							noteTitle = ""
-							noteContent = ""
+				Image(systemName: "mic.fill")
+					.resizable()
+					.aspectRatio(contentMode: .fit)
+					.foregroundColor(isRecording ? .green : .red)
+					.frame(height: 80)
+					.onTapGesture {
+						errorMessage = ""
+						noteTitle = ""
+						noteContent = ""
+						
+						if isRecording {
+							speechRecognizer.stopRecording()
+							isRecording = false
 							
-							if isRecording {
-								speechRecognizer.stopRecording()
-								isRecording = false
-								
-								parseRecording()
-								
-							} else {
-								recording = ""
-								isRecording = true
-								speechRecognizer.record(to: $recording)
-							}
+							parseRecording()
+							
+						} else {
+							recording = ""
+							isRecording = true
+							speechRecognizer.record(to: $recording)
 						}
-					
-					Text(recording)
-						.font(.title3)
-						.frame(height: 20)
-					
-					VStack(alignment: .leading) {
-						Text(noteTitle)
-						Text(noteContent)
 					}
+				
+				Text(recording)
 					.font(.title3)
+				
+				VStack(alignment: .leading) {
+					Text(noteTitle)
+					Text(noteContent)
 				}
-			} else {
-				HStack(spacing: 40) {
-					Text(errorMessage)
-						.frame(height: 20)
-					
-					Image(systemName: "mic.fill")
-						.resizable()
-						.aspectRatio(contentMode: .fit)
-						.foregroundColor(isRecording ? .green : .red)
-						.frame(height: 80)
-						.onTapGesture {
-							errorMessage = ""
-							noteTitle = ""
-							noteContent = ""
-							
-							if isRecording {
-								speechRecognizer.stopRecording()
-								isRecording = false
-								
-								parseRecording()
-								
-							} else {
-								recording = ""
-								isRecording = true
-								speechRecognizer.record(to: $recording)
-							}
-						}
-					
-					Text(recording)
-						.font(.title3)
-						.frame(height: 20)
-					
-					VStack(alignment: .leading) {
-						Text(noteTitle)
-						Text(noteContent)
-					}
-					.font(.body)					
-				}
+				.font(.title3)
+
 			}
-		}
-		.onRotate { newOrientation in
-			orientation = newOrientation
 		}
 	}
 	
@@ -166,23 +116,23 @@ struct TakeNoteView: View {
 				}
 			}
 		} else if tmpTokens.contains("utility") && tmpTokens.contains("lock") {
-			 utilityApiService.performAction(actionType: .lock) { result in
-				 switch result {
-					 case .success(let data):
-						 let decoder = JSONDecoder()
-						 decoder.keyDecodingStrategy = .convertFromSnakeCase
-						 do {
-							 let message = try decoder.decode(ResponseMessage.self, from: data)
-							 
-							 DispatchQueue.main.async { self.noteContent = message.message }
-							 
-						 } catch {
-							 print("\(error)")
-						 }
-					 case .failure(let error):
-						 print("failure \(error)")
-				 }
-			 }
+			utilityApiService.performAction(actionType: .lock) { result in
+				switch result {
+					case .success(let data):
+						let decoder = JSONDecoder()
+						decoder.keyDecodingStrategy = .convertFromSnakeCase
+						do {
+							let message = try decoder.decode(ResponseMessage.self, from: data)
+							
+							DispatchQueue.main.async { self.noteContent = message.message }
+							
+						} catch {
+							print("\(error)")
+						}
+					case .failure(let error):
+						print("failure \(error)")
+				}
+			}
 		} else if tmpTokens.contains("system") && tmpTokens.contains("status") {
 			utilityApiService.performAction(actionType: .status) { result in
 				switch result {

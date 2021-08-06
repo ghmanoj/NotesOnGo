@@ -11,7 +11,7 @@ import SwiftUI
 struct SettingsView: View {
 	@AppStorage("isDarkMode") var isDarkMode: Bool = true
 	
-	@ObservedObject private var viewModel = SettingsViewModel()
+	@ObservedObject private var viewModel = ObjectUtils.settingsViewModel
 	
 	@State private var isDevCommand: Bool = false
 	
@@ -63,15 +63,6 @@ struct SettingsView: View {
 			}
 			.onAppear {
 				viewModel.fetchLatest()
-			}
-		}
-		.onRotate { orientation in
-			if orientation == .portrait
-					|| orientation == .portraitUpsideDown
-					|| orientation == .unknown {
-				seperator = "\n"
-			} else {
-				seperator = " | "
 			}
 		}
 		.padding()
