@@ -7,9 +7,10 @@ import Foundation
 import Speech
 import SwiftUI
 
+
 /// A helper for transcribing speech to text using AVAudioEngine.
 struct SpeechRecognizer {
-	let greetingMessage: String
+	let greeting: String
 	
 	private class SpeechAssist {
 		var audioEngine: AVAudioEngine?
@@ -32,24 +33,16 @@ struct SpeechRecognizer {
 	
 	private let assistant = SpeechAssist()
 	
-	/**
-	Begin transcribing audio.
 	
-	Creates a `SFSpeechRecognitionTask` that transcribes speech to text until you call `stopRecording()`.
-	The resulting transcription is continuously written to the provided text binding.
-	
-	-  Parameters:
-	- speech: A binding to a string where the transcription is written.
-	*/
-	func record(to speech: Binding<String>) {
-		relay(speech, message: "Requesting access")
+	func record(callback: @escaping (String) -> Void) {
+		relay(message: "Requesting access", to: callback)
 		canAccess { authorized in
 			guard authorized else {
-				relay(speech, message: "Access denied")
+				relay(message: "Access denied", to: callback)
 				return
 			}
 			
-			relay(speech, message: "Access granted")
+			relay(message: "Access granted", to: callback)
 			
 			assistant.audioEngine = AVAudioEngine()
 			guard let audioEngine = assistant.audioEngine else {
@@ -74,13 +67,13 @@ struct SpeechRecognizer {
 				inputNode.installTap(onBus: 0, bufferSize: 1024, format: recordingFormat) { (buffer: AVAudioPCMBuffer, when: AVAudioTime) in
 					recognitionRequest.append(buffer)
 				}
-				relay(speech, message: greetingMessage)
+				relay(message: greeting, to: callback)
 				audioEngine.prepare()
 				try audioEngine.start()
 				assistant.recognitionTask = assistant.speechRecognizer?.recognitionTask(with: recognitionRequest) { (result, error) in
 					var isFinal = false
 					if let result = result {
-						relay(speech, message: result.bestTranscription.formattedString)
+						relay(message: result.bestTranscription.formattedString, to: callback)
 						isFinal = result.isFinal
 					}
 					
@@ -114,9 +107,8 @@ struct SpeechRecognizer {
 		}
 	}
 	
-	private func relay(_ binding: Binding<String>, message: String) {
-		DispatchQueue.main.async {
-			binding.wrappedValue = message
-		}
+	private func relay(message: String, to callback: (String) -> Void) {
+		// relay message to the callback
+		callback(message)
 	}
 }
