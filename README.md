@@ -11,4 +11,7 @@ Based on the idea I got from youtube video: https://www.youtube.com/watch?v=k_jP
 
 
 ### Demo
+<img src="https://github.com/ghmanoj/NotesOnGo/blob/656472a44d2ee1a8e07e573a99eea0b300e030ad/demo/1.PNG" width=150 align=left>
+<img src="https://github.com/ghmanoj/NotesOnGo/blob/656472a44d2ee1a8e07e573a99eea0b300e030ad/demo/2.PNG" width=150 align=left>
+<img src="https://github.com/ghmanoj/NotesOnGo/blob/656472a44d2ee1a8e07e573a99eea0b300e030ad/demo/3.PNG" width=150 align=left>
 
