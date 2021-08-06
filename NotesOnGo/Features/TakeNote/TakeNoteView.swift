@@ -10,7 +10,7 @@ import Speech
 import AVFoundation
 
 struct TakeNoteView: View {
-
+	
 	@ObservedObject var viewModel = ObjectUtils.takeNoteViewModel
 	
 	var body: some View {
@@ -47,13 +47,37 @@ struct TakeNoteView: View {
 				Text(viewModel.liveRecordingUpdates)
 					.font(.title3)
 				
-				VStack(alignment: .leading) {
-					Text(viewModel.noteTitle)
-					Text(viewModel.noteContent)
+				HStack(alignment: .center) {
+					if !viewModel.noteTitle.isEmpty
+							&& !viewModel.noteContent.isEmpty {
+						VStack(alignment: .trailing) {
+							Text("Title")
+							Text("Content")
+						}
+						.font(.callout)
+						.foregroundColor(.secondary)
+					}
+					
+					VStack(alignment: .leading) {
+						Text(viewModel.noteTitle)
+						Text(viewModel.noteContent)
+					}
+					.font(.title3)
+					
+					Spacer(minLength: 0)
+					
+					Group {
+						if !viewModel.noteTitle.isEmpty && !viewModel.noteContent.isEmpty {
+							Button(action: {}) {
+								Text("Save")
+							}
+						}
+					}
+					.frame(width: 50, height: 50)
 				}
-				.font(.title3)
 			}
 		}
+		.padding()
 	}	
 }
 

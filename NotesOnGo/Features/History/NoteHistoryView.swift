@@ -11,6 +11,7 @@ struct NoteHistoryView: View {
 	var body: some View {
 		VStack {
 		}
+		.padding()
 	}
 }
 

@@ -26,6 +26,8 @@ class TakeNoteViewModel: ObservableObject {
 	func onMicButtonPress() {
 		isRecording.toggle()
 		errorMessage = ""
+		noteTitle = ""
+		noteContent = ""
 	
 		if isRecording {
 			speechRecognizer.record { message in
@@ -40,6 +42,8 @@ class TakeNoteViewModel: ObservableObject {
 	}
 	
 	private func updateLiveRecording(_ message: String) {
+		print(message)
+		
 		DispatchQueue.main.async {
 			self.liveRecordingUpdates = message
 		}
@@ -124,8 +128,10 @@ class TakeNoteViewModel: ObservableObject {
 		} else {
 			DispatchQueue.main.async {
 				self.errorMessage = "Please specify note title and content"
+				DispatchQueue.main.asyncAfter(deadline: .now()+1.5) {
+					self.errorMessage = ""
+				}
 			}
 		}
 	}
-	
 }
