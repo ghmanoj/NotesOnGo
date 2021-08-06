@@ -33,3 +33,12 @@ extension View {
 		UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
 	}
 }
+
+
+extension Date {
+	func formatDate() -> String {
+		let dateFormatter = DateFormatter()
+		dateFormatter.setLocalizedDateFormatFromTemplate("MMM d, yyyy")
+		return dateFormatter.string(from: self)
+	}
+}

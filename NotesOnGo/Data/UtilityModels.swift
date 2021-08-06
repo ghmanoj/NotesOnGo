@@ -38,3 +38,8 @@ struct CommandMessage: Codable {
 		return data
 	}
 }
+
+
+enum DbError: Error {
+	case saveFailed, invalidData, unknown
+}

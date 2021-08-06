@@ -9,7 +9,7 @@ import Foundation
 
 
 class TakeNoteViewModel: ObservableObject {
-
+	
 	@Published private(set) var isRecording = false
 	@Published private(set) var errorMessage = ""
 	
@@ -19,16 +19,17 @@ class TakeNoteViewModel: ObservableObject {
 	@Published private(set) var noteContent = ""
 	
 	private let speechRecognizer = SpeechRecognizer(greeting: "Start speaking....")
-
+	
 	private let utilityApiService = ObjectUtils.utilityApiService
-
-
+	private let persistenceController = ObjectUtils.persistenceController
+	
+	
 	func onMicButtonPress() {
 		isRecording.toggle()
 		errorMessage = ""
 		noteTitle = ""
 		noteContent = ""
-	
+		
 		if isRecording {
 			speechRecognizer.record { message in
 				self.updateLiveRecording(message)
@@ -41,10 +42,28 @@ class TakeNoteViewModel: ObservableObject {
 		}
 	}
 	
+	func onSaveNote() {
+		if !noteTitle.isEmpty && !noteContent.isEmpty {
+			let noteData = NoteData(title: noteTitle, content: noteContent, timestamp: Date())
+			
+			persistenceController.saveNoteData(noteData) { result in
+				switch result {
+					case .success(_):
+						print("Data saving successful")
+						RunInUiThread {
+							self.noteTitle = ""
+							self.noteContent = ""
+						}
+					case .failure(let message):
+						print(message)
+				}
+			}
+		}
+	}
+	
+	
 	private func updateLiveRecording(_ message: String) {
-		print(message)
-		
-		DispatchQueue.main.async {
+		RunInUiThread {
 			self.liveRecordingUpdates = message
 		}
 	}
@@ -62,76 +81,82 @@ class TakeNoteViewModel: ObservableObject {
 			let content = tokens[contentIndex+1..<tokens.count].joined(separator: " ")
 			
 			
-			DispatchQueue.main.async {
+			RunInUiThread {
 				self.noteTitle = title.capitalized
 				self.noteContent = content.capitalized
 			}
 			
-		} else if tmpTokens.contains("utility") && tmpTokens.contains("logout") {
-			utilityApiService.performAction(actionType: .logout) { result in
-				switch result {
-					case .success(let data):
-						let decoder = JSONDecoder()
-						decoder.keyDecodingStrategy = .convertFromSnakeCase
-						do {
-							let message = try decoder.decode(ResponseMessage.self, from: data)
-							
-							DispatchQueue.main.async {
-								self.noteContent = message.message
-							}
-							
-						} catch {
-							print("\(error)")
-						}
-					case .failure(let error):
-						print("failure \(error)")
-				}
-			}
-		} else if tmpTokens.contains("utility") && tmpTokens.contains("lock") {
-			utilityApiService.performAction(actionType: .lock) { result in
-				switch result {
-					case .success(let data):
-						let decoder = JSONDecoder()
-						decoder.keyDecodingStrategy = .convertFromSnakeCase
-						do {
-							let message = try decoder.decode(ResponseMessage.self, from: data)
-							
-							DispatchQueue.main.async {
-								self.noteContent = message.message
-							}
-						} catch {
-							print("\(error)")
-						}
-					case .failure(let error):
-						print("failure \(error)")
-				}
-			}
-		} else if tmpTokens.contains("system") && tmpTokens.contains("status") {
-			utilityApiService.performAction(actionType: .status) { result in
-				switch result {
-					case .success(let data):
-						let decoder = JSONDecoder()
-						decoder.keyDecodingStrategy = .convertFromSnakeCase
-						do {
-							let message = try decoder.decode(ResponseMessage.self, from: data)
-							
-							DispatchQueue.main.async {
-								self.noteContent = message.message
-							}
-						} catch {
-							print("\(error)")
-						}
-					case .failure(let error):
-						print("failure \(error)")
-				}
-			}
-		} else {
-			DispatchQueue.main.async {
+		}
+		//		else if tmpTokens.contains("utility") && tmpTokens.contains("logout") {
+		//			utilityApiService.performAction(actionType: .logout) { result in
+		//				switch result {
+		//					case .success(let data):
+		//						let decoder = JSONDecoder()
+		//						decoder.keyDecodingStrategy = .convertFromSnakeCase
+		//						do {
+		//							let message = try decoder.decode(ResponseMessage.self, from: data)
+		//
+		//							DispatchQueue.main.async {
+		//								self.noteContent = message.message
+		//							}
+		//
+		//						} catch {
+		//							print("\(error)")
+		//						}
+		//					case .failure(let error):
+		//						print("failure \(error)")
+		//				}
+		//			}
+		//		}
+		//		else if tmpTokens.contains("utility") && tmpTokens.contains("lock") {
+		//			utilityApiService.performAction(actionType: .lock) { result in
+		//				switch result {
+		//					case .success(let data):
+		//						let decoder = JSONDecoder()
+		//						decoder.keyDecodingStrategy = .convertFromSnakeCase
+		//						do {
+		//							let message = try decoder.decode(ResponseMessage.self, from: data)
+		//
+		//							DispatchQueue.main.async {
+		//								self.noteContent = message.message
+		//							}
+		//						} catch {
+		//							print("\(error)")
+		//						}
+		//					case .failure(let error):
+		//						print("failure \(error)")
+		//				}
+		//			}
+		//		}
+		//		else if tmpTokens.contains("system") && tmpTokens.contains("status") {
+		//			utilityApiService.performAction(actionType: .status) { result in
+		//				switch result {
+		//					case .success(let data):
+		//						let decoder = JSONDecoder()
+		//						decoder.keyDecodingStrategy = .convertFromSnakeCase
+		//						do {
+		//							let message = try decoder.decode(ResponseMessage.self, from: data)
+		//
+		//							DispatchQueue.main.async {
+		//								self.noteContent = message.message
+		//							}
+		//						} catch {
+		//							print("\(error)")
+		//						}
+		//					case .failure(let error):
+		//						print("failure \(error)")
+		//				}
+		//			}
+		//		}
+		else {
+			RunInUiThread {
 				self.errorMessage = "Please specify note title and content"
-				DispatchQueue.main.asyncAfter(deadline: .now()+1.5) {
+				DispatchQueue.main.asyncAfter(deadline: .now()+1.2) {
 					self.errorMessage = ""
 				}
 			}
 		}
 	}
+
+	
 }

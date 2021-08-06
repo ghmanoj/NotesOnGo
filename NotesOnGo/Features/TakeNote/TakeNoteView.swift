@@ -68,7 +68,9 @@ struct TakeNoteView: View {
 					
 					Group {
 						if !viewModel.noteTitle.isEmpty && !viewModel.noteContent.isEmpty {
-							Button(action: {}) {
+							Button(action: {
+								viewModel.onSaveNote()
+							}) {
 								Text("Save")
 							}
 						}
