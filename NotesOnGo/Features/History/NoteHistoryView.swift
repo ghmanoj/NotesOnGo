@@ -18,9 +18,11 @@ struct NoteHistoryView: View {
 		ScrollView {
 			LazyVGrid(columns: columns) {
 				ForEach(viewModel.noteDataList, id: \.uid) { item in
-					NoteHistoryCard(noteItem: item) { deleteItem in
-						deleteDelegate(deleteItem)
-					}
+					NoteHistoryCard(
+						noteItem: item,
+						deleteDelegate: deleteDelegate,
+						updateDelegate: updateDelegate
+					)
 				}
 			}
 			.padding(.horizontal)
@@ -29,6 +31,11 @@ struct NoteHistoryView: View {
 		.onAppear {
 			viewModel.onGetNotesHistory(0)
 		}
+	}
+	
+	private func updateDelegate(_ item: NoteData) {
+		print("Updating \(item)")
+		viewModel.onUpdateItem(item)
 	}
 	
 	private func performDelete(_ idxSet: IndexSet) {
@@ -49,6 +56,7 @@ struct NoteHistoryCard: View {
 	
 	let noteItem: NoteData
 	let deleteDelegate: (NoteData) -> Void
+	let updateDelegate: (NoteData) -> Void
 	
 	@State var showSheet = false
 	
@@ -72,10 +80,22 @@ struct NoteHistoryCard: View {
 			.frame(width: 150, height: 150)
 		}
 		.sheet(isPresented: $showSheet) {
-			NoteHistoryDetail(noteItem: noteItem) {
-				showSheet.toggle()
-				deleteDelegate(noteItem)
-			}
+			NoteHistoryDetail(
+				noteItem: noteItem,
+				onDelete: {
+					showSheet.toggle()
+					deleteDelegate(noteItem)
+				},
+				onUpdate: { title, content in
+					let updatedNoteItem = NoteData(
+						uid: noteItem.uid,
+						title: title,
+						content: content,
+						timestamp: noteItem.timestamp
+					)
+					updateDelegate(updatedNoteItem)
+				}
+			)
 		}
 		.onTapGesture {
 			showSheet.toggle()
@@ -86,24 +106,39 @@ struct NoteHistoryCard: View {
 struct NoteHistoryDetail: View {
 	@AppStorage("isDarkMode") var isDarkMode: Bool = true
 	
+	@State private var isEditMode = false
+	@State private var titleText = ""
+	@State private var contentText = ""
+	
 	let noteItem: NoteData
-	let deleteDelegate: () -> Void
+	let onDelete: () -> Void
+	let onUpdate: (_ title: String, _ content: String) -> Void
 	
 	var body: some View {
 		VStack {
 			
-			HStack(spacing: 5) {
+			HStack(spacing: 15) {
 				Spacer(minLength: 0)
 				Button(action: {
-					// edit delegate
+					if isEditMode {
+						// Update delegate
+						isEditMode.toggle()
+						onUpdate(titleText, contentText)
+					} else {
+						titleText = noteItem.title
+						contentText = noteItem.content
+						
+						isEditMode.toggle()
+					}
 				}) {
-					Text("Edit")
+					Text(isEditMode ? "Update" : "Edit")
 				}
 				.padding(3)
+				.background(isEditMode ? Color.green : Color.blue)
 				.cornerRadius(5)
 				
 				Button(action: {
-					deleteDelegate()
+					onDelete()
 				}) {
 					Text("Delete")
 				}
@@ -113,16 +148,29 @@ struct NoteHistoryDetail: View {
 			}
 			.padding()
 			
-			VStack(alignment: .leading, spacing: 20) {
-				Text("Title: \(noteItem.title)")
-					.font(.title)
-				Text("Content: \(noteItem.content)")
-					.font(.title2)
-				Text("Date: \(noteItem.timestamp.formatDate())")
-					.font(.body)
+			if isEditMode {
+				VStack(alignment: .leading, spacing: 20) {
+					TextField("Title", text: $titleText)
+						.font(.title)
+					TextField("Content", text: $contentText)
+						.font(.title2)
+					Text("Date: \(noteItem.timestamp.formatDate())")
+						.font(.body)
+				}
+				.padding()
+				.frame(maxWidth: .infinity, alignment: .leading)
+			} else {
+				VStack(alignment: .leading, spacing: 20) {
+					Text("Title: \(noteItem.title)")
+						.font(.title)
+					Text("Content: \(noteItem.content)")
+						.font(.title2)
+					Text("Date: \(noteItem.timestamp.formatDate())")
+						.font(.body)
+				}
+				.padding()
+				.frame(maxWidth: .infinity, alignment: .leading)
 			}
-			.padding()
-			.frame(maxWidth: .infinity, alignment: .leading)
 			
 			Spacer(minLength: 0)
 		}

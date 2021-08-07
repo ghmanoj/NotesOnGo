@@ -69,9 +69,9 @@ class PersistenceController {
 	}
 	
 	func deleteNoteData(_ uid: UUID, completion: @escaping (Result<Bool, DbError>) -> Void) {
-		let uidString = uid.uuidString
 		
 		container.performBackgroundTask { ctx in
+			let uidString = uid.uuidString
 			let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "NoteEntity")
 			fetchRequest.predicate = NSPredicate(format: "%K == %@", "uid", uidString)
 			let batchDeleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
@@ -88,4 +88,28 @@ class PersistenceController {
 		}
 	}
 	
+	func updateNoteData(_ noteItem: NoteData, completion: @escaping (Result<Bool, DbError>) -> Void) {
+		
+		container.performBackgroundTask { ctx in
+			let uidString = noteItem.uid.uuidString
+
+			let fetchRequest: NSFetchRequest<NoteEntity> = NSFetchRequest(entityName: "NoteEntity")
+			fetchRequest.predicate = NSPredicate(format: "%K == %@", "uid", uidString)
+			
+			do {
+				let noteEntity = try ctx.fetch(fetchRequest).first!
+				noteEntity.title = noteItem.title
+				noteEntity.content = noteItem.content
+				
+				try ctx.save()
+			} catch {
+				print("Error deleting note data \(error)")
+				completion(.failure(.unknown))
+				return
+			}
+			
+			completion(.success(true))
+		}
+		
+	}
 }

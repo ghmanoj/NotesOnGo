@@ -51,4 +51,15 @@ class NoteHistoryViewModel: ObservableObject {
 		}
 	}
 	
+	func onUpdateItem(_ noteItem: NoteData) {
+		persistenceController.updateNoteData(noteItem) { result in
+			switch result {
+				case .success(_):
+					RunInUiThread { self.onGetNotesHistory(0) }
+				case .failure(let error):
+					print("Error \(error)")
+			}
+		}
+	}
+	
 }
