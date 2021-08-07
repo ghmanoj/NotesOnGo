@@ -38,4 +38,17 @@ class NoteHistoryViewModel: ObservableObject {
 		}
 	}
 	
+	func onDeleteItem(_ noteItem: NoteData) {
+		let uid = noteItem.uid
+		
+		persistenceController.deleteNoteData(uid) { result in
+			switch result {
+				case .success(_):
+					RunInUiThread { self.onGetNotesHistory(0) }
+				case .failure(let error):
+					print("Error \(error)")
+			}
+		}
+	}
+	
 }
