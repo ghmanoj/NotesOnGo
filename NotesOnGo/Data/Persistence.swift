@@ -31,7 +31,7 @@ class PersistenceController {
 	func saveNoteData(_ noteData: NoteData, completion: @escaping (Result<Bool, DbError>) -> Void) {
 		container.performBackgroundTask { ctx in
 			let entity = NoteEntity(context: ctx)
-			entity.uid = noteData.uid
+			entity.uid = noteData.uid.uuidString
 			entity.title = noteData.title
 			entity.content = noteData.content
 			entity.timestamp = noteData.timestamp
@@ -59,12 +59,32 @@ class PersistenceController {
 			
 			do {
 				let entities = try ctx.fetch(fetchRequest)
-				notes = entities.map { NoteData(title: $0.title!, content: $0.content!, timestamp: $0.timestamp!) }
+				notes = entities.map { NoteData(uid: UUID(uuidString: $0.uid!)!, title: $0.title!, content: $0.content!, timestamp: $0.timestamp!) }
 				completion(.success(notes))
 			} catch {
 				print("Error while fetching note data.\(error)")
 				completion(.failure(.unknown))
 			}
+		}
+	}
+	
+	func deleteNoteData(_ uid: UUID, completion: @escaping (Result<Bool, DbError>) -> Void) {
+		let uidString = uid.uuidString
+		
+		container.performBackgroundTask { ctx in
+			let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "NoteEntity")
+			fetchRequest.predicate = NSPredicate(format: "%K == %@", "uid", uidString)
+			let batchDeleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+			
+			do {
+				try ctx.execute(batchDeleteRequest)
+			} catch {
+				print("Error deleting note data \(error)")
+				completion(.failure(.unknown))
+				return
+			}
+			
+			completion(.success(true))
 		}
 	}
 	

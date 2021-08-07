@@ -9,7 +9,7 @@ import Foundation
 
 
 struct NoteData {
-	let uid = UUID()
+	let uid: UUID
 	let title: String
 	let content: String
 	let timestamp: Date

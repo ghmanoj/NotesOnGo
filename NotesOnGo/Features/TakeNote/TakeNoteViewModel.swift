@@ -44,7 +44,7 @@ class TakeNoteViewModel: ObservableObject {
 	
 	func onSaveNote() {
 		if !noteTitle.isEmpty && !noteContent.isEmpty {
-			let noteData = NoteData(title: noteTitle, content: noteContent, timestamp: Date())
+			let noteData = NoteData(uid: UUID(), title: noteTitle, content: noteContent, timestamp: Date())
 			
 			persistenceController.saveNoteData(noteData) { result in
 				switch result {

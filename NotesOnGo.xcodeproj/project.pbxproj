@@ -46,6 +46,7 @@
 		AF3801A326BA5B38008B717D /* NoteHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteHistoryView.swift; sourceTree = "<group>"; };
 		AF3801A626BA5C9B008B717D /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		AF3801A826BB5F55008B717D /* TopBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopBar.swift; sourceTree = "<group>"; };
+		AF4B0DAC26BE1B6E00A01986 /* AppDbStorageV2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = AppDbStorageV2.xcdatamodel; sourceTree = "<group>"; };
 		AF4BEF7226BCEA6C00CD493D /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		AF4BEF7526BCEB4C00CD493D /* AppDbStorage.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = AppDbStorage.xcdatamodel; sourceTree = "<group>"; };
 		AF7BD93E26BB8E5400E0C1E8 /* SpeechRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeechRecognizer.swift; sourceTree = "<group>"; };
@@ -469,9 +470,10 @@
 		AF4BEF7426BCEB4C00CD493D /* AppDbStorage.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				AF4B0DAC26BE1B6E00A01986 /* AppDbStorageV2.xcdatamodel */,
 				AF4BEF7526BCEB4C00CD493D /* AppDbStorage.xcdatamodel */,
 			);
-			currentVersion = AF4BEF7526BCEB4C00CD493D /* AppDbStorage.xcdatamodel */;
+			currentVersion = AF4B0DAC26BE1B6E00A01986 /* AppDbStorageV2.xcdatamodel */;
 			path = AppDbStorage.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

@@ -22,7 +22,6 @@ struct NoteHistoryView: View {
 							Text(item.content)
 								.font(.body)
 								.foregroundColor(.secondary)
-
 						}
 						Spacer(minLength: 0)
 						Text("\(item.timestamp.formatDate())")
@@ -30,11 +29,20 @@ struct NoteHistoryView: View {
 							.font(.body)
 					}
 				}
+				.onDelete { idxSet in
+					performDelete(idxSet)
+				}
 			}
 		}
 		.padding()
 		.onAppear {
 			viewModel.onGetNotesHistory(0)
+		}
+	}
+	
+	private func performDelete(_ idxSet: IndexSet) {
+		for noteIndex in idxSet {
+			viewModel.onNoteItemSwipe(noteIndex)
 		}
 	}
 }
