@@ -150,10 +150,20 @@ struct NoteHistoryDetail: View {
 			
 			if isEditMode {
 				VStack(alignment: .leading, spacing: 20) {
-					TextField("Title", text: $titleText)
+					
+					TextEditor(text: $titleText)
 						.font(.title)
-					TextField("Content", text: $contentText)
+						.background(getBackground())
+						.cornerRadius(20)
+						.frame(maxHeight: 120)
+					
+					TextEditor(text: $contentText)
 						.font(.title2)
+						.background(getBackground())
+						.cornerRadius(20)
+						.frame(maxHeight: 120)
+
+
 					Text("Date: \(noteItem.timestamp.formatDate())")
 						.font(.body)
 				}
@@ -178,5 +188,9 @@ struct NoteHistoryDetail: View {
 		.frame(maxWidth: .infinity, maxHeight: .infinity)
 		.background(isDarkMode ? Color.black.opacity(0.5) : Color.white)
 		.foregroundColor(isDarkMode ? .white : .black)
+	}
+	
+	func getBackground() -> Color {
+		return isDarkMode ? Color.white.opacity(0.1) : Color.black.opacity(0.1)
 	}
 }
