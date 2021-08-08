@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+// MARK: - Note history view with grid layout containing cards
 struct NoteHistoryView: View {
 	@ObservedObject var viewModel = ObjectUtils.noteHistoryViewModel
 	
@@ -50,7 +51,7 @@ struct NoteHistoryView: View {
 	}
 }
 
-
+// MARK: - Note history card
 struct NoteHistoryCard: View {
 	@Environment(\.colorScheme) var scheme
 	
@@ -82,6 +83,9 @@ struct NoteHistoryCard: View {
 		.sheet(isPresented: $showSheet) {
 			NoteHistoryDetail(
 				noteItem: noteItem,
+				onCancel: {
+					showSheet.toggle()
+				},
 				onDelete: {
 					showSheet.toggle()
 					deleteDelegate(noteItem)
@@ -103,14 +107,16 @@ struct NoteHistoryCard: View {
 	}
 }
 
+// MARK: - Notes details sheet presented on notecard tap
 struct NoteHistoryDetail: View {
-	@AppStorage("isDarkMode") var isDarkMode: Bool = true
+	//	@AppStorage("isDarkMode") var isDarkMode: Bool = true
 	
 	@State private var isEditMode = false
 	@State private var titleText = ""
 	@State private var contentText = ""
 	
 	let noteItem: NoteData
+	let onCancel: () -> Void
 	let onDelete: () -> Void
 	let onUpdate: (_ title: String, _ content: String) -> Void
 	
@@ -118,17 +124,32 @@ struct NoteHistoryDetail: View {
 		VStack {
 			
 			HStack(spacing: 15) {
+				if isEditMode {
+					Button(action: {
+						onCancel()
+					}) {
+						Text("Cancel")
+					}
+					.padding(3)
+					.background(Color.black)
+					.cornerRadius(5)
+				}
+				
 				Spacer(minLength: 0)
 				Button(action: {
 					if isEditMode {
 						// Update delegate
-						isEditMode.toggle()
+						withAnimation {
+							isEditMode.toggle()
+						}
 						onUpdate(titleText, contentText)
 					} else {
 						titleText = noteItem.title
 						contentText = noteItem.content
 						
-						isEditMode.toggle()
+						withAnimation {
+							isEditMode.toggle()
+						}
 					}
 				}) {
 					Text(isEditMode ? "Update" : "Edit")
@@ -146,26 +167,38 @@ struct NoteHistoryDetail: View {
 				.background(Color.red)
 				.cornerRadius(5)
 			}
+			.foregroundColor(.white)
+			.font(.title2)
 			.padding()
 			
 			if isEditMode {
 				VStack(alignment: .leading, spacing: 20) {
 					
-					TextEditor(text: $titleText)
-						.font(.title)
-						.background(getBackground())
-						.cornerRadius(20)
-						.frame(maxHeight: 120)
-					
-					TextEditor(text: $contentText)
-						.font(.title2)
-						.background(getBackground())
-						.cornerRadius(20)
-						.frame(maxHeight: 120)
-
-
 					Text("Date: \(noteItem.timestamp.formatDate())")
 						.font(.body)
+						.padding(.bottom)
+					
+					VStack(alignment: .leading, spacing: 1) {
+						Text("Title")
+							.font(.body)
+						Divider()
+						TextEditor(text: $titleText)
+							.font(.title2)
+							.disableAutocorrection(true)
+							.cornerRadius(20)
+							.frame(maxHeight: 120)
+					}
+					
+					VStack(alignment: .leading, spacing: 1) {
+						Text("Content")
+							.font(.body)
+						Divider()
+						TextEditor(text: $contentText)
+							.font(.title2)
+							.disableAutocorrection(true)
+							.cornerRadius(20)
+							.frame(maxHeight: 120)
+					}
 				}
 				.padding()
 				.frame(maxWidth: .infinity, alignment: .leading)
@@ -186,11 +219,7 @@ struct NoteHistoryDetail: View {
 		}
 		.padding(30)
 		.frame(maxWidth: .infinity, maxHeight: .infinity)
-		.background(isDarkMode ? Color.black.opacity(0.5) : Color.white)
-		.foregroundColor(isDarkMode ? .white : .black)
-	}
-	
-	func getBackground() -> Color {
-		return isDarkMode ? Color.white.opacity(0.1) : Color.black.opacity(0.1)
+		//		.background(isDarkMode ? Color.black : .white)
+		//		.foregroundColor(isDarkMode ? .white : .black)
 	}
 }
