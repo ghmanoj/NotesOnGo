@@ -151,7 +151,7 @@ class TakeNoteViewModel: ObservableObject {
 		else {
 			RunInUiThread {
 				self.errorMessage = "Please specify note title and content"
-				DispatchQueue.main.asyncAfter(deadline: .now()+1.2) {
+				DispatchQueue.main.asyncAfter(deadline: .now()+2) {
 					self.errorMessage = ""
 				}
 			}

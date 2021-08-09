@@ -13,6 +13,11 @@ struct TakeNoteView: View {
 	
 	@ObservedObject var viewModel = ObjectUtils.takeNoteViewModel
 	
+	private var foreverAnimation: Animation {
+		Animation.linear(duration: 1)
+			.repeatForever(autoreverses: true)
+	}
+	
 	var body: some View {
 		VStack(spacing: 15) {
 			
@@ -33,19 +38,23 @@ struct TakeNoteView: View {
 			
 			VStack(spacing: 40) {
 				Text(viewModel.errorMessage)
-					.frame(height: 50)
+					.foregroundColor(.secondary)
+					.font(.callout)
+					.frame(height: 60, alignment: .center)
 				
 				Image(systemName: "mic.fill")
 					.resizable()
 					.aspectRatio(contentMode: .fit)
 					.foregroundColor(viewModel.isRecording ? .green : .red)
-					.frame(height: 80)
+					.frame(width: 80, height: 80)
+					.scaleEffect(viewModel.isRecording ? 1.2 : 1)
+					.animation(viewModel.isRecording ? foreverAnimation : .default)
 					.onTapGesture {
 						viewModel.onMicButtonPress()
 					}
 				
 				Text(viewModel.liveRecordingUpdates)
-					.font(.title3)
+					.font(.callout)
 				
 				HStack(alignment: .center) {
 					if !viewModel.noteTitle.isEmpty
@@ -70,6 +79,7 @@ struct TakeNoteView: View {
 						if !viewModel.noteTitle.isEmpty && !viewModel.noteContent.isEmpty {
 							Button(action: {
 								viewModel.onSaveNote()
+								generateHepaticFeedback()
 							}) {
 								Text("Save")
 							}

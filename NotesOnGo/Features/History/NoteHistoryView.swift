@@ -24,18 +24,16 @@ struct NoteHistoryView: View {
 						deleteDelegate: deleteDelegate,
 						updateDelegate: updateDelegate
 					)
+					.padding(5)
 				}
 			}
-			.padding(.horizontal)
 		}
-		.padding()
 		.onAppear {
 			viewModel.onGetNotesHistory(0)
 		}
 	}
 	
 	private func updateDelegate(_ item: NoteData) {
-		print("Updating \(item)")
 		viewModel.onUpdateItem(item)
 	}
 	
@@ -46,8 +44,8 @@ struct NoteHistoryView: View {
 	}
 	
 	private func deleteDelegate(_ item: NoteData) {
-		print("\(item) will be deleted")
 		viewModel.onDeleteItem(item)
+		generateHepaticFeedback()
 	}
 }
 
@@ -64,7 +62,7 @@ struct NoteHistoryCard: View {
 	var body: some View {
 		ZStack {
 			Rectangle()
-				.frame(width: 150, height: 150)
+				.frame(width: 165, height: 155)
 				.foregroundColor(.secondary.opacity(0.15))
 				.cornerRadius(20)
 			
@@ -78,7 +76,7 @@ struct NoteHistoryCard: View {
 					.font(.caption)
 			}
 			.padding(12)
-			.frame(width: 150, height: 150)
+			.frame(width: 165, height: 155)
 		}
 		.sheet(isPresented: $showSheet) {
 			NoteHistoryDetail(
@@ -126,6 +124,7 @@ struct NoteHistoryDetail: View {
 			HStack(spacing: 15) {
 				if isEditMode {
 					Button(action: {
+						generateHepaticFeedback()
 						onCancel()
 					}) {
 						Text("Cancel")
@@ -137,6 +136,8 @@ struct NoteHistoryDetail: View {
 				
 				Spacer(minLength: 0)
 				Button(action: {
+					generateHepaticFeedback()
+					
 					if isEditMode {
 						// Update delegate
 						withAnimation {
@@ -159,6 +160,7 @@ struct NoteHistoryDetail: View {
 				.cornerRadius(5)
 				
 				Button(action: {
+					generateHepaticFeedback()
 					onDelete()
 				}) {
 					Text("Delete")
@@ -168,7 +170,7 @@ struct NoteHistoryDetail: View {
 				.cornerRadius(5)
 			}
 			.foregroundColor(.white)
-			.font(.title2)
+			.font(.title3)
 			.padding()
 			
 			if isEditMode {
@@ -219,7 +221,5 @@ struct NoteHistoryDetail: View {
 		}
 		.padding(30)
 		.frame(maxWidth: .infinity, maxHeight: .infinity)
-		//		.background(isDarkMode ? Color.black : .white)
-		//		.foregroundColor(isDarkMode ? .white : .black)
 	}
 }
