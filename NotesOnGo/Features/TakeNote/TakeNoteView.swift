@@ -10,6 +10,7 @@ import Speech
 import AVFoundation
 
 struct TakeNoteView: View {
+	@Environment(\.appAccentColor) var appAccentColor
 	
 	@ObservedObject var viewModel = ObjectUtils.takeNoteViewModel
 	
@@ -45,7 +46,7 @@ struct TakeNoteView: View {
 				Image(systemName: "mic.fill")
 					.resizable()
 					.aspectRatio(contentMode: .fit)
-					.foregroundColor(viewModel.isRecording ? .green : .red)
+					.foregroundColor(viewModel.isRecording ? .green : appAccentColor)
 					.frame(width: 80, height: 80)
 					.scaleEffect(viewModel.isRecording ? 1.2 : 1)
 					.animation(viewModel.isRecording ? foreverAnimation : .default)

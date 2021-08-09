@@ -12,7 +12,7 @@ struct NoteHistoryView: View {
 	@ObservedObject var viewModel = ObjectUtils.noteHistoryViewModel
 	
 	let columns = [
-		GridItem(.adaptive(minimum: 150))
+		GridItem(.adaptive(minimum: 165))
 	]
 	
 	var body: some View {
@@ -67,9 +67,14 @@ struct NoteHistoryCard: View {
 				.cornerRadius(20)
 			
 			VStack(alignment: .center) {
-				Text(noteItem.title)
-					.font(.title3)
-					.fontWeight(.medium)
+				HStack {
+					Text(noteItem.title)
+						.font(.title3)
+						.fontWeight(.medium)
+					Spacer(minLength: 0)
+				}
+
+				Spacer(minLength: 0)
 				
 				Text("\(noteItem.timestamp.formatDate())")
 					.foregroundColor(.secondary)

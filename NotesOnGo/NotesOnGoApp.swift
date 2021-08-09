@@ -9,11 +9,24 @@ import SwiftUI
 
 @main
 struct NotesOnGoApp: App {
+	let appAccentColor: Color = Color.red
+	
 	var body: some Scene {
 		WindowGroup {
 			ContentView()
-				// .modifier(DarkModeViewModifier())
+				.environment(\.appAccentColor, appAccentColor)
 		}
+	}
+}
+
+private struct AppAccentColorKey: EnvironmentKey {
+	static let defaultValue = Color.red
+}
+
+extension EnvironmentValues {
+	var appAccentColor: Color {
+		get { self[AppAccentColorKey.self] }
+		set { self[AppAccentColorKey.self] = newValue }
 	}
 }
 

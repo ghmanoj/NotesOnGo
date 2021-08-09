@@ -38,7 +38,7 @@ extension View {
 extension Date {
 	func formatDate() -> String {
 		let dateFormatter = DateFormatter()
-		dateFormatter.setLocalizedDateFormatFromTemplate("MMM d, yyyy")
+		dateFormatter.setLocalizedDateFormatFromTemplate("MMM d, yyyy hh:mm")
 		return dateFormatter.string(from: self)
 	}
 }

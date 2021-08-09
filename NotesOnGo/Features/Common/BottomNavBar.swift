@@ -9,6 +9,8 @@ import SwiftUI
 
 // MARK: - Bottom Bar Button
 struct NavButton: View {
+	@Environment(\.appAccentColor) var appAccentColor
+	
 	let image: String
 	let label: String
 	let type: LayoutType
@@ -22,7 +24,7 @@ struct NavButton: View {
 				.aspectRatio(contentMode: .fit)
 				.frame(width: 30, height: 30)
 				.font(.title)
-				.foregroundColor((layoutType == type) ? .red : .secondary)
+				.foregroundColor((layoutType == type) ? appAccentColor : .secondary)
 				.onTapGesture {
 					generateHepaticFeedback()
 					layoutType = type
@@ -46,5 +48,6 @@ struct BottomNavBar: View {
 			
 			NavButton(image: "gear", label: "Settings", type: .settings, layoutType: $layoutType)
 		}
+		.padding([.horizontal, .top])
 	}
 }
