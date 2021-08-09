@@ -61,6 +61,11 @@ class TakeNoteViewModel: ObservableObject {
 		}
 	}
 	
+	func onDiscardNote() {
+		noteTitle = ""
+		noteContent = ""
+	}
+	
 	
 	private func updateLiveRecording(_ message: String) {
 		RunInUiThread {

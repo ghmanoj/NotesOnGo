@@ -34,10 +34,12 @@ struct TakeNoteView: View {
 					Text("Content [content of the note]")
 				}
 			}
+			.padding(.vertical, 20)
+			.frame(maxWidth: .infinity)
 			.font(.caption2)
 			.foregroundColor(.secondary)
 			
-			VStack(spacing: 40) {
+			VStack(alignment:.center, spacing: 40) {
 				Text(viewModel.errorMessage)
 					.foregroundColor(.secondary)
 					.font(.callout)
@@ -57,37 +59,50 @@ struct TakeNoteView: View {
 				Text(viewModel.liveRecordingUpdates)
 					.font(.callout)
 				
-				HStack(alignment: .center) {
-					if !viewModel.noteTitle.isEmpty
-							&& !viewModel.noteContent.isEmpty {
-						VStack(alignment: .trailing) {
-							Text("Title")
-							Text("Content")
-						}
-						.font(.callout)
-						.foregroundColor(.secondary)
-					}
-					
-					VStack(alignment: .leading) {
+				Spacer(minLength: 0)
+			}
+			.frame(maxWidth: .infinity)
+			
+			if !viewModel.noteTitle.isEmpty && !viewModel.noteContent.isEmpty {
+				VStack(alignment: .leading, spacing: 10) {
+					HStack {
+						Text("Title")
+							.foregroundColor(.secondary)
+							.font(.caption)
 						Text(viewModel.noteTitle)
-						Text(viewModel.noteContent)
+							.font(.title3)
 					}
-					.font(.title3)
+					.frame(maxWidth: .infinity)
 					
-					Spacer(minLength: 0)
+					HStack {
+						Text("Content")
+							.foregroundColor(.secondary)
+							.font(.caption)
+						Text(viewModel.noteContent)
+							.font(.title3)
+						
+					}
+					.frame(maxWidth: .infinity)
 					
-					Group {
-						if !viewModel.noteTitle.isEmpty && !viewModel.noteContent.isEmpty {
-							Button(action: {
-								viewModel.onSaveNote()
-								generateHepaticFeedback()
-							}) {
-								Text("Save")
-							}
+					HStack(spacing: 40) {
+						Button(action: {
+							viewModel.onSaveNote()
+							generateHepaticFeedback()
+						}) {
+							Text("Save")
+						}
+						
+						Button(action: {
+							viewModel.onDiscardNote()
+							generateHepaticFeedback()
+						}) {
+							Text("Discard")
 						}
 					}
-					.frame(width: 50, height: 50)
+					.padding()
+					.frame(maxWidth: .infinity)
 				}
+				.padding(.bottom)
 			}
 		}
 		.padding()
