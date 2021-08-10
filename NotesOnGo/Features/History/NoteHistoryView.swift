@@ -68,7 +68,7 @@ struct NoteHistoryCard: View {
 			
 			VStack(alignment: .center) {
 				HStack {
-					Text(noteItem.title)
+					Text(noteItem.content)
 						.font(.title3)
 						.fontWeight(.medium)
 					Spacer(minLength: 0)
@@ -93,10 +93,9 @@ struct NoteHistoryCard: View {
 					showSheet.toggle()
 					deleteDelegate(noteItem)
 				},
-				onUpdate: { title, content in
+				onUpdate: { content in
 					let updatedNoteItem = NoteData(
 						uid: noteItem.uid,
-						title: title,
 						content: content,
 						timestamp: noteItem.timestamp
 					)
@@ -115,13 +114,12 @@ struct NoteHistoryDetail: View {
 	//	@AppStorage("isDarkMode") var isDarkMode: Bool = true
 	
 	@State private var isEditMode = false
-	@State private var titleText = ""
 	@State private var contentText = ""
 	
 	let noteItem: NoteData
 	let onCancel: () -> Void
 	let onDelete: () -> Void
-	let onUpdate: (_ title: String, _ content: String) -> Void
+	let onUpdate: ( _ content: String) -> Void
 	
 	var body: some View {
 		VStack {
@@ -148,9 +146,8 @@ struct NoteHistoryDetail: View {
 						withAnimation {
 							isEditMode.toggle()
 						}
-						onUpdate(titleText, contentText)
+						onUpdate(contentText)
 					} else {
-						titleText = noteItem.title
 						contentText = noteItem.content
 						
 						withAnimation {
@@ -186,18 +183,7 @@ struct NoteHistoryDetail: View {
 						.padding(.bottom)
 					
 					VStack(alignment: .leading, spacing: 1) {
-						Text("Title")
-							.font(.body)
-						Divider()
-						TextEditor(text: $titleText)
-							.font(.title2)
-							.disableAutocorrection(true)
-							.cornerRadius(20)
-							.frame(maxHeight: 120)
-					}
-					
-					VStack(alignment: .leading, spacing: 1) {
-						Text("Content")
+						Text("Note Record")
 							.font(.body)
 						Divider()
 						TextEditor(text: $contentText)
@@ -211,9 +197,7 @@ struct NoteHistoryDetail: View {
 				.frame(maxWidth: .infinity, alignment: .leading)
 			} else {
 				VStack(alignment: .leading, spacing: 20) {
-					Text("Title: \(noteItem.title)")
-						.font(.title)
-					Text("Content: \(noteItem.content)")
+					Text(noteItem.content)
 						.font(.title2)
 					Text("Date: \(noteItem.timestamp.formatDate())")
 						.font(.body)

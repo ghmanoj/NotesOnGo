@@ -21,29 +21,25 @@ struct TakeNoteView: View {
 	
 	var body: some View {
 		VStack(spacing: 15) {
-			
-			VStack(alignment: .leading, spacing: 3) {
+			VStack(alignment: .leading) {
 				HStack {
 					Image(systemName: "megaphone")
 						.rotationEffect(.degrees(-45))
-					Text("Title [title of the note]")
-				}
-				HStack {
-					Image(systemName: "megaphone")
-						.rotationEffect(.degrees(-45))
-					Text("Content [content of the note]")
+					Text("Record [say content of the note here]")
 				}
 			}
-			.padding(.vertical, 20)
+			.padding(.vertical)
 			.frame(maxWidth: .infinity)
 			.font(.caption2)
 			.foregroundColor(.secondary)
 			
-			VStack(alignment:.center, spacing: 40) {
-				Text(viewModel.errorMessage)
-					.foregroundColor(.secondary)
+			VStack(alignment:.center, spacing: 10) {
+				
+				Text(viewModel.isRecording ? viewModel.liveRecordingUpdates : viewModel.infoMessage)
+					.foregroundColor(viewModel.isRecording ? .primary : .secondary)
 					.font(.callout)
-					.frame(height: 60, alignment: .center)
+					.frame(maxWidth: .infinity, alignment: .top)
+					.frame(height: 110)
 				
 				Image(systemName: "mic.fill")
 					.resizable()
@@ -55,34 +51,22 @@ struct TakeNoteView: View {
 					.onTapGesture {
 						viewModel.onMicButtonPress()
 					}
-				
-				Text(viewModel.liveRecordingUpdates)
-					.font(.callout)
-				
-				Spacer(minLength: 0)
 			}
 			.frame(maxWidth: .infinity)
 			
-			if !viewModel.noteTitle.isEmpty && !viewModel.noteContent.isEmpty {
+			Spacer(minLength: 0)
+			
+			if !viewModel.noteContent.isEmpty {
 				VStack(alignment: .leading, spacing: 10) {
-					HStack {
-						Text("Title")
-							.foregroundColor(.secondary)
-							.font(.caption)
-						Text(viewModel.noteTitle)
-							.font(.title3)
-					}
-					.frame(maxWidth: .infinity)
 					
-					HStack {
-						Text("Content")
+					VStack(spacing: 10) {
+						Text("Note Recording")
 							.foregroundColor(.secondary)
-							.font(.caption)
+							.font(.caption2)
 						Text(viewModel.noteContent)
 							.font(.title3)
-						
 					}
-					.frame(maxWidth: .infinity)
+					.frame(maxWidth: .infinity, alignment: .center)
 					
 					HStack(spacing: 40) {
 						Button(action: {

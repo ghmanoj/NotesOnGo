@@ -11,12 +11,12 @@ import Foundation
 class TakeNoteViewModel: ObservableObject {
 	
 	@Published private(set) var isRecording = false
-	@Published private(set) var errorMessage = ""
+	@Published private(set) var infoMessage = ""
+	
+	@Published private(set) var noteContent = ""
 	
 	@Published private(set) var liveRecordingUpdates = ""
-	
-	@Published private(set) var noteTitle = ""
-	@Published private(set) var noteContent = ""
+
 	
 	private let speechRecognizer = SpeechRecognizer(greeting: "Start speaking....")
 	
@@ -26,8 +26,6 @@ class TakeNoteViewModel: ObservableObject {
 	
 	func onMicButtonPress() {
 		isRecording.toggle()
-		errorMessage = ""
-		noteTitle = ""
 		noteContent = ""
 		
 		if isRecording {
@@ -43,15 +41,13 @@ class TakeNoteViewModel: ObservableObject {
 	}
 	
 	func onSaveNote() {
-		if !noteTitle.isEmpty && !noteContent.isEmpty {
-			let noteData = NoteData(uid: UUID(), title: noteTitle, content: noteContent, timestamp: Date())
+		if !noteContent.isEmpty {
+			let noteData = NoteData(uid: UUID(), content: noteContent, timestamp: Date())
 			
 			persistenceController.saveNoteData(noteData) { result in
 				switch result {
 					case .success(_):
-						print("Data saving successful")
 						RunInUiThread {
-							self.noteTitle = ""
 							self.noteContent = ""
 						}
 					case .failure(let message):
@@ -62,7 +58,6 @@ class TakeNoteViewModel: ObservableObject {
 	}
 	
 	func onDiscardNote() {
-		noteTitle = ""
 		noteContent = ""
 	}
 	
@@ -73,95 +68,48 @@ class TakeNoteViewModel: ObservableObject {
 		}
 	}
 	
-	private func parseRecording() {		
-		let tokens = liveRecordingUpdates.split(separator: " ")
-		
-		let tmpTokens = tokens.map { $0.lowercased() }
-		
-		if tmpTokens.contains("title") && tmpTokens.contains("content") {
-			let titleIndex = tmpTokens.firstIndex(of: "title")!
-			let contentIndex = tmpTokens.firstIndex(of: "content")!
-			
-			let title = tokens[titleIndex+1..<contentIndex].joined(separator: " ")
-			let content = tokens[contentIndex+1..<tokens.count].joined(separator: " ")
-			
-			
-			RunInUiThread {
-				self.noteTitle = title.capitalized
-				self.noteContent = content.capitalized
+	private func parseRecording() {
+		var recording = liveRecordingUpdates
+				
+		// starts with record so is note recording
+		if recording.lowercased().starts(with: "record") {
+			guard let separatorIdx = recording.firstIndex(of: " ") else {
+				showErrorMessage("Speech should start with ^Record and have some content")
+				return
 			}
 			
-		}
-		//		else if tmpTokens.contains("utility") && tmpTokens.contains("logout") {
-		//			utilityApiService.performAction(actionType: .logout) { result in
-		//				switch result {
-		//					case .success(let data):
-		//						let decoder = JSONDecoder()
-		//						decoder.keyDecodingStrategy = .convertFromSnakeCase
-		//						do {
-		//							let message = try decoder.decode(ResponseMessage.self, from: data)
-		//
-		//							DispatchQueue.main.async {
-		//								self.noteContent = message.message
-		//							}
-		//
-		//						} catch {
-		//							print("\(error)")
-		//						}
-		//					case .failure(let error):
-		//						print("failure \(error)")
-		//				}
-		//			}
-		//		}
-		//		else if tmpTokens.contains("utility") && tmpTokens.contains("lock") {
-		//			utilityApiService.performAction(actionType: .lock) { result in
-		//				switch result {
-		//					case .success(let data):
-		//						let decoder = JSONDecoder()
-		//						decoder.keyDecodingStrategy = .convertFromSnakeCase
-		//						do {
-		//							let message = try decoder.decode(ResponseMessage.self, from: data)
-		//
-		//							DispatchQueue.main.async {
-		//								self.noteContent = message.message
-		//							}
-		//						} catch {
-		//							print("\(error)")
-		//						}
-		//					case .failure(let error):
-		//						print("failure \(error)")
-		//				}
-		//			}
-		//		}
-		//		else if tmpTokens.contains("system") && tmpTokens.contains("status") {
-		//			utilityApiService.performAction(actionType: .status) { result in
-		//				switch result {
-		//					case .success(let data):
-		//						let decoder = JSONDecoder()
-		//						decoder.keyDecodingStrategy = .convertFromSnakeCase
-		//						do {
-		//							let message = try decoder.decode(ResponseMessage.self, from: data)
-		//
-		//							DispatchQueue.main.async {
-		//								self.noteContent = message.message
-		//							}
-		//						} catch {
-		//							print("\(error)")
-		//						}
-		//					case .failure(let error):
-		//						print("failure \(error)")
-		//				}
-		//			}
-		//		}
-		else {
+			let startIdx = recording.startIndex
+			
+			recording.removeSubrange(startIdx..<separatorIdx)
+			recording.removeFirst()
+
+			if recording.count < 2 {
+				showErrorMessage("Not enough content in the recording")
+				return
+			}
+			
+			var	data = String(recording.removeFirst().uppercased())
+			data.append(recording)
+			
+			noteContent = data
+			
 			RunInUiThread {
-				self.errorMessage = "Please specify note title and content"
-				DispatchQueue.main.asyncAfter(deadline: .now()+2) {
-					self.errorMessage = ""
-				}
+				self.liveRecordingUpdates = ""
+				self.infoMessage = ""
+			}
+		}
+		else {
+			showErrorMessage("Please specify note")
+		}
+	}
+	
+	private func showErrorMessage(_ message: String) {
+		RunInUiThread {
+			self.infoMessage = message
+			DispatchQueue.main.asyncAfter(deadline: .now()+2) {
+				self.infoMessage = ""
 			}
 		}
 	}
-
 	
 }

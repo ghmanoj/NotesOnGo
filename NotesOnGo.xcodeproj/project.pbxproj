@@ -60,6 +60,7 @@
 		AF7BD95226BCB1D200E0C1E8 /* ObjectUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectUtils.swift; sourceTree = "<group>"; };
 		AF7BD95426BCB23000E0C1E8 /* TakeNoteViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TakeNoteViewModel.swift; sourceTree = "<group>"; };
 		AF7BD95626BCB25000E0C1E8 /* NoteHistoryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteHistoryViewModel.swift; sourceTree = "<group>"; };
+		AF8516BF26C2067600CAF936 /* AppDbStorageV3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = AppDbStorageV3.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -501,10 +502,11 @@
 		AF4BEF7426BCEB4C00CD493D /* AppDbStorage.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				AF8516BF26C2067600CAF936 /* AppDbStorageV3.xcdatamodel */,
 				AF4B0DAC26BE1B6E00A01986 /* AppDbStorageV2.xcdatamodel */,
 				AF4BEF7526BCEB4C00CD493D /* AppDbStorage.xcdatamodel */,
 			);
-			currentVersion = AF4B0DAC26BE1B6E00A01986 /* AppDbStorageV2.xcdatamodel */;
+			currentVersion = AF8516BF26C2067600CAF936 /* AppDbStorageV3.xcdatamodel */;
 			path = AppDbStorage.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

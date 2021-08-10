@@ -32,7 +32,6 @@ class PersistenceController {
 		container.performBackgroundTask { ctx in
 			let entity = NoteEntity(context: ctx)
 			entity.uid = noteData.uid.uuidString
-			entity.title = noteData.title
 			entity.content = noteData.content
 			entity.timestamp = noteData.timestamp
 			
@@ -59,7 +58,7 @@ class PersistenceController {
 			
 			do {
 				let entities = try ctx.fetch(fetchRequest)
-				notes = entities.map { NoteData(uid: UUID(uuidString: $0.uid!)!, title: $0.title!, content: $0.content!, timestamp: $0.timestamp!) }
+				notes = entities.map { NoteData(uid: UUID(uuidString: $0.uid!)!, content: $0.content!, timestamp: $0.timestamp!) }
 				completion(.success(notes))
 			} catch {
 				print("Error while fetching note data.\(error)")
@@ -98,7 +97,6 @@ class PersistenceController {
 			
 			do {
 				let noteEntity = try ctx.fetch(fetchRequest).first!
-				noteEntity.title = noteItem.title
 				noteEntity.content = noteItem.content
 				
 				try ctx.save()
