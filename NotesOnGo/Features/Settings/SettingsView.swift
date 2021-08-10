@@ -9,34 +9,25 @@ import SwiftUI
 
 // MARK: - Settings View
 struct SettingsView: View {
-	
+	private let logger = ObjectUtils.logger
+
 	@ObservedObject private var viewModel = ObjectUtils.settingsViewModel
-	//
-	//	@State private var isDevCommand: Bool = false
-	//
-	//	@State private var seperator = "\n"
-	//
-	//	private let availableDevCommands = [
-	//		"Command: utility, Modifier: logout",
-	//		"Command: utility, Modifier: lock",
-	//		"Command: system, Modifier: status",
-	//	]
 	
 	var body: some View {
 		VStack(alignment: .leading, spacing: 20) {
 			
 			Toggle("Cmdr Mode", isOn: $viewModel.isCmdrMode)
 				.onChange(of: viewModel.isCmdrMode) { value in
+					logger.i("\(value)")
 					viewModel.onCmdrModeToggle()
 				}
 				.font(.title2)
-			
-			Spacer(minLength: 0)
-			
+				.padding(.bottom)
+						
 			if viewModel.isCmdrMode {
 				VStack(alignment: .leading, spacing: 5) {
 					HStack {
-						TextField("Ex: 192.168.1.1", text: $viewModel.apiEndPointIp)
+						TextField("Add endpoint. Ex: 192.168.1.1", text: $viewModel.apiEndPointIp)
 							.disableAutocorrection(true)
 							.autocapitalization(.none)
 							.padding(8)
@@ -55,12 +46,16 @@ struct SettingsView: View {
 					
 					Text(viewModel.infoMessage)
 						.font(.caption2)
-						.foregroundColor(.red)
+						.foregroundColor(.red.opacity(0.8))
 						.frame(maxWidth: .infinity, alignment: .leading)
 						.frame(height: 20)
 						.padding(.bottom, 10)
 											
 					Divider()
+					
+					Text("Api endpoints")
+						.font(.caption2)
+						.foregroundColor(.secondary)
 					
 					List {
 						ForEach(viewModel.apiEndPoints, id: \.uid) { item in
@@ -73,6 +68,8 @@ struct SettingsView: View {
 					.frame(maxWidth: .infinity, maxHeight: 250, alignment: .leading)
 				}
 			}
+			
+			Spacer(minLength: 0)
 		}
 		.onAppear {
 			viewModel.fetchAppSettings()

@@ -89,6 +89,9 @@ struct TakeNoteView: View {
 				.padding(.bottom)
 			}
 		}
+		.onAppear {
+			viewModel.fetchAppSettings()
+		}
 		.padding()
 	}	
 }

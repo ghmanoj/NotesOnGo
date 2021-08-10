@@ -9,7 +9,8 @@ import Foundation
 
 
 class ActionCommandHelper {
-	private let utilityApiService = UtilityApiService()
+	private let utilityApiService = ObjectUtils.utilityApiService
+	private let logger = ObjectUtils.logger
 	
 	func perform(msg: String, on endPoints: [ApiEndPointData]) {
 		// sanity check
@@ -17,6 +18,9 @@ class ActionCommandHelper {
 			print("Action should start with ^System or ^Utility")
 			return
 		}
+		
+		logger.i(msg)
+		
 
 		if msg.starts(with: "system") {
 			handleSystemCmdAction(msg, endPoints)
