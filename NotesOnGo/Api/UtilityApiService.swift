@@ -9,25 +9,15 @@ import Foundation
 
 
 class UtilityApiService {
-	private static var apiEndPoint = "192.168.1.80"
 	
-	static func setApiEndPoint(_ ip: String) {
-		apiEndPoint = ip
-	}
-	
-	static func getCurrentApiEndPoint() -> String {
-		return apiEndPoint
-	}
-	
-	func performAction(actionType: UtilityActionType, completion: @escaping(Result<Data, NetworkError>) -> Void) {
-		let apiUrl = "http://\(UtilityApiService.apiEndPoint):8081/utilities_local"
+	func performAction(_ endpointIP: String, actionType: UtilityActionType, completion: @escaping(Result<Data, NetworkError>) -> Void) {
+		let apiUrl = "http://\(endpointIP):8081/utilities_local"
+		print("Performing tasks in \(apiUrl)")
 		
 		guard let url = URL(string: apiUrl) else {
 			completion(.failure(.badURL))
 			return
 		}
-		
-
 		
 		var jsonData: Data?
 		

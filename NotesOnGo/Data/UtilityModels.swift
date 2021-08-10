@@ -8,6 +8,11 @@
 import Foundation
 
 
+struct ApiEndPointData {
+	var uid: String = UUID().uuidString
+	let ip: String
+}
+
 // https://www.hackingwithswift.com/books/ios-swiftui/understanding-swifts-result-type
 enum NetworkError: Error {
 	case badURL, requestFailed, unknown, messageError
