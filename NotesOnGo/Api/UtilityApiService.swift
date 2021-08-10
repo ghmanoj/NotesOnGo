@@ -10,7 +10,7 @@ import Foundation
 
 class UtilityApiService {
 	
-	func performAction(_ endpointIP: String, actionType: UtilityActionType, completion: @escaping(Result<Data, NetworkError>) -> Void) {
+	func performAction(_ endpointIP: String, cmdMessage: CommandMessage, completion: @escaping(Result<Data, NetworkError>) -> Void) {
 		let apiUrl = "http://\(endpointIP):8081/utilities_local"
 		print("Performing tasks in \(apiUrl)")
 		
@@ -22,7 +22,7 @@ class UtilityApiService {
 		var jsonData: Data?
 		
 		do {
-			let message = actionToCommandMessage(action: actionType)
+			let message = cmdMessage
 			jsonData = try JSONSerialization.data(withJSONObject: message.getDict(), options: .prettyPrinted)
 		} catch {
 			print("Error \(error)")
@@ -47,16 +47,5 @@ class UtilityApiService {
 				completion(.failure(.unknown))
 			}
 		}.resume()
-	}
-	
-	private func actionToCommandMessage(action: UtilityActionType) -> CommandMessage {
-		switch action {
-			case .logout:
-				return CommandMessage(command: "utility", modifier: "logout")
-			case .lock:
-				return CommandMessage(command: "utility", modifier: "lock")
-			case .status:
-				return CommandMessage(command: "system", modifier: "status")
-		}
 	}
 }

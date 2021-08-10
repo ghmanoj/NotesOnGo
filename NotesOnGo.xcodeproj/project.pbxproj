@@ -31,6 +31,7 @@
 		AF7BD95526BCB23000E0C1E8 /* TakeNoteViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF7BD95426BCB23000E0C1E8 /* TakeNoteViewModel.swift */; };
 		AF7BD95726BCB25000E0C1E8 /* NoteHistoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF7BD95626BCB25000E0C1E8 /* NoteHistoryViewModel.swift */; };
 		AFAEEE6D26C232F3003846CE /* AppSettingsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFAEEE6C26C232F3003846CE /* AppSettingsData.swift */; };
+		AFAEEE6F26C25D4C003846CE /* CommandHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFAEEE6E26C25D4C003846CE /* CommandHelper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -62,6 +63,7 @@
 		AF7BD95626BCB25000E0C1E8 /* NoteHistoryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteHistoryViewModel.swift; sourceTree = "<group>"; };
 		AF8516BF26C2067600CAF936 /* AppDbStorageV3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = AppDbStorageV3.xcdatamodel; sourceTree = "<group>"; };
 		AFAEEE6C26C232F3003846CE /* AppSettingsData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettingsData.swift; sourceTree = "<group>"; };
+		AFAEEE6E26C25D4C003846CE /* CommandHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandHelper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -135,6 +137,7 @@
 				AF38019F26BA5993008B717D /* Extensions.swift */,
 				AF7BD94626BBA97F00E0C1E8 /* Utilities.swift */,
 				AF7BD95226BCB1D200E0C1E8 /* ObjectUtils.swift */,
+				AFAEEE6E26C25D4C003846CE /* CommandHelper.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -284,6 +287,7 @@
 				AF3801A926BB5F55008B717D /* TopBar.swift in Sources */,
 				AF7BD94126BB9A8900E0C1E8 /* UtilityApiService.swift in Sources */,
 				AF7BD95726BCB25000E0C1E8 /* NoteHistoryViewModel.swift in Sources */,
+				AFAEEE6F26C25D4C003846CE /* CommandHelper.swift in Sources */,
 				AF38019726BA5856008B717D /* NoteData.swift in Sources */,
 				AF38018426BA57D6008B717D /* NotesOnGoApp.swift in Sources */,
 				AF7BD95326BCB1D200E0C1E8 /* ObjectUtils.swift in Sources */,

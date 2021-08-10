@@ -17,12 +17,11 @@ class TakeNoteViewModel: ObservableObject {
 	
 	@Published private(set) var liveRecordingUpdates = ""
 
-	
 	private let speechRecognizer = SpeechRecognizer(greeting: "Start speaking....")
 	
-	private let utilityApiService = ObjectUtils.utilityApiService
 	private let persistenceController = ObjectUtils.persistenceController
 	
+	private let actionCommandHelper = ActionCommandHelper()
 	
 	func onMicButtonPress() {
 		isRecording.toggle()
@@ -61,7 +60,6 @@ class TakeNoteViewModel: ObservableObject {
 		noteContent = ""
 	}
 	
-	
 	private func updateLiveRecording(_ message: String) {
 		RunInUiThread {
 			self.liveRecordingUpdates = message
@@ -69,37 +67,45 @@ class TakeNoteViewModel: ObservableObject {
 	}
 	
 	private func parseRecording() {
-		var recording = liveRecordingUpdates
-				
+		let msg = liveRecordingUpdates.lowercased()
 		// starts with record so is note recording
-		if recording.lowercased().starts(with: "record") {
-			guard let separatorIdx = recording.firstIndex(of: " ") else {
-				showErrorMessage("Speech should start with ^Record and have some content")
-				return
+		if msg.starts(with: "record") {
+			handleRecordCommand()
+		} else if msg.starts(with: "system") || msg.starts(with: "utility") {
+			persistenceController.getApiEndPointData { result in
+				switch result {
+					case .success(let endPoints):
+						self.actionCommandHelper.perform(msg: msg, on: endPoints)
+					case .failure(_):
+						print("Failed to fetch api endpoints")
+				}
 			}
-			
-			let startIdx = recording.startIndex
-			
-			recording.removeSubrange(startIdx..<separatorIdx)
-			recording.removeFirst()
-
-			if recording.count < 2 {
-				showErrorMessage("Not enough content in the recording")
-				return
-			}
-			
-			var	data = String(recording.removeFirst().uppercased())
-			data.append(recording)
-			
-			noteContent = data
-			
-			RunInUiThread {
-				self.liveRecordingUpdates = ""
-				self.infoMessage = ""
-			}
-		}
-		else {
+		} else {
 			showErrorMessage("Please specify note")
+		}
+	}
+	
+	private func handleRecordCommand() {
+		var recording = liveRecordingUpdates
+		guard let separatorIdx = recording.firstIndex(of: " ") else {
+			showErrorMessage("Speech should start with ^Record and have some content")
+			return
+		}
+		let startIdx = recording.startIndex
+		recording.removeSubrange(startIdx..<separatorIdx)
+		recording.removeFirst()
+
+		if recording.count < 2 {
+			showErrorMessage("Not enough content in the recording")
+			return
+		}
+		var	data = String(recording.removeFirst().uppercased())
+		data.append(recording)
+		noteContent = data
+		
+		RunInUiThread {
+			self.liveRecordingUpdates = ""
+			self.infoMessage = ""
 		}
 	}
 	
@@ -111,5 +117,4 @@ class TakeNoteViewModel: ObservableObject {
 			}
 		}
 	}
-	
 }
