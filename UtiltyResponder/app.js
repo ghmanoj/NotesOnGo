@@ -57,7 +57,7 @@ function executeAndRespond(cmd, res) {
 			res.send({ 'message': `${stderr}`, 'status': false })
 			return;
 		}
-		res.send({ 'message': `${stdout}`, 'status': true })
+		res.send({ 'message': `${stdout.trim()}`, 'status': true })
 	});
 }
 

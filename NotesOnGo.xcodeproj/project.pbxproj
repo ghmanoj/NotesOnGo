@@ -3,12 +3,11 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 50;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		AF17A4E526C0EE7F008351F4 /* splash.json in Resources */ = {isa = PBXBuildFile; fileRef = AF17A4E426C0EE7F008351F4 /* splash.json */; };
-		AF34597A26C0E38E007F1B13 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = AF34597926C0E38E007F1B13 /* Lottie */; };
 		AF38018426BA57D6008B717D /* NotesOnGoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF38018326BA57D6008B717D /* NotesOnGoApp.swift */; };
 		AF38018626BA57D6008B717D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF38018526BA57D6008B717D /* ContentView.swift */; };
 		AF38018826BA57D6008B717D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AF38018726BA57D6008B717D /* Assets.xcassets */; };
@@ -31,6 +30,9 @@
 		AF7BD95326BCB1D200E0C1E8 /* ObjectUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF7BD95226BCB1D200E0C1E8 /* ObjectUtils.swift */; };
 		AF7BD95526BCB23000E0C1E8 /* TakeNoteViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF7BD95426BCB23000E0C1E8 /* TakeNoteViewModel.swift */; };
 		AF7BD95726BCB25000E0C1E8 /* NoteHistoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF7BD95626BCB25000E0C1E8 /* NoteHistoryViewModel.swift */; };
+		AFAEEE6D26C232F3003846CE /* AppSettingsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFAEEE6C26C232F3003846CE /* AppSettingsData.swift */; };
+		AFAEEE6F26C25D4C003846CE /* CommandHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFAEEE6E26C25D4C003846CE /* CommandHelper.swift */; };
+		AFAEEE7126C264E8003846CE /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFAEEE7026C264E8003846CE /* Logger.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -61,6 +63,9 @@
 		AF7BD95426BCB23000E0C1E8 /* TakeNoteViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TakeNoteViewModel.swift; sourceTree = "<group>"; };
 		AF7BD95626BCB25000E0C1E8 /* NoteHistoryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteHistoryViewModel.swift; sourceTree = "<group>"; };
 		AF8516BF26C2067600CAF936 /* AppDbStorageV3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = AppDbStorageV3.xcdatamodel; sourceTree = "<group>"; };
+		AFAEEE6C26C232F3003846CE /* AppSettingsData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettingsData.swift; sourceTree = "<group>"; };
+		AFAEEE6E26C25D4C003846CE /* CommandHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandHelper.swift; sourceTree = "<group>"; };
+		AFAEEE7026C264E8003846CE /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,7 +73,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AF34597A26C0E38E007F1B13 /* Lottie in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -135,6 +139,8 @@
 				AF38019F26BA5993008B717D /* Extensions.swift */,
 				AF7BD94626BBA97F00E0C1E8 /* Utilities.swift */,
 				AF7BD95226BCB1D200E0C1E8 /* ObjectUtils.swift */,
+				AFAEEE6E26C25D4C003846CE /* CommandHelper.swift */,
+				AFAEEE7026C264E8003846CE /* Logger.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -146,6 +152,7 @@
 				AF38019D26BA5944008B717D /* LayoutType.swift */,
 				AF7BD94226BB9AA700E0C1E8 /* UtilityModels.swift */,
 				AF4BEF7226BCEA6C00CD493D /* Persistence.swift */,
+				AFAEEE6C26C232F3003846CE /* AppSettingsData.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -211,7 +218,6 @@
 			);
 			name = NotesOnGo;
 			packageProductDependencies = (
-				AF34597926C0E38E007F1B13 /* Lottie */,
 			);
 			productName = NotesOnGo;
 			productReference = AF38018026BA57D6008B717D /* NotesOnGo.app */;
@@ -241,7 +247,6 @@
 			);
 			mainGroup = AF38017726BA57D6008B717D;
 			packageReferences = (
-				AF34597826C0E38E007F1B13 /* XCRemoteSwiftPackageReference "lottie-ios" */,
 			);
 			productRefGroup = AF38018126BA57D6008B717D /* Products */;
 			projectDirPath = "";
@@ -278,12 +283,15 @@
 				AF3801A726BA5C9B008B717D /* SettingsView.swift in Sources */,
 				AF3801A426BA5B38008B717D /* NoteHistoryView.swift in Sources */,
 				AF38018626BA57D6008B717D /* ContentView.swift in Sources */,
+				AFAEEE6D26C232F3003846CE /* AppSettingsData.swift in Sources */,
+				AFAEEE7126C264E8003846CE /* Logger.swift in Sources */,
 				AF4BEF7326BCEA6C00CD493D /* Persistence.swift in Sources */,
 				AF7BD94326BB9AA700E0C1E8 /* UtilityModels.swift in Sources */,
 				AF3801A226BA5B2A008B717D /* TakeNoteView.swift in Sources */,
 				AF3801A926BB5F55008B717D /* TopBar.swift in Sources */,
 				AF7BD94126BB9A8900E0C1E8 /* UtilityApiService.swift in Sources */,
 				AF7BD95726BCB25000E0C1E8 /* NoteHistoryViewModel.swift in Sources */,
+				AFAEEE6F26C25D4C003846CE /* CommandHelper.swift in Sources */,
 				AF38019726BA5856008B717D /* NoteData.swift in Sources */,
 				AF38018426BA57D6008B717D /* NotesOnGoApp.swift in Sources */,
 				AF7BD95326BCB1D200E0C1E8 /* ObjectUtils.swift in Sources */,
@@ -478,25 +486,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		AF34597826C0E38E007F1B13 /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/airbnb/lottie-ios.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 3.2.3;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		AF34597926C0E38E007F1B13 /* Lottie */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = AF34597826C0E38E007F1B13 /* XCRemoteSwiftPackageReference "lottie-ios" */;
-			productName = Lottie;
-		};
-/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		AF4BEF7426BCEB4C00CD493D /* AppDbStorage.xcdatamodeld */ = {

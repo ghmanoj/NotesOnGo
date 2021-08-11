@@ -41,4 +41,20 @@ extension Date {
 		dateFormatter.setLocalizedDateFormatFromTemplate("MMM d, yyyy hh:mm")
 		return dateFormatter.string(from: self)
 	}
+	
+	
+	func formatLogDate() -> String {
+		// Aug 10 00:55:15
+
+		let dateFormatter = DateFormatter()
+		dateFormatter.dateFormat = "MMM d HH:mm:ss"
+		return dateFormatter.string(from: self)
+	}
+	
+	
+	func formatDateForFileName() -> String {
+		let dateFormatter = DateFormatter()
+		dateFormatter.dateFormat = "YYYYMMddhh"
+		return dateFormatter.string(from: self)
+	}
 }

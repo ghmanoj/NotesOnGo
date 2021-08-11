@@ -24,9 +24,117 @@ class PersistenceController {
 	}
 	
 	
-	func saveSettings(isDevCmdOn: Bool, completion: @escaping (Result<Bool, DbError>) -> Void) {
-		
+	func getAppSettings(completion: @escaping (Result<AppSettingsData, DbError>) -> Void) {
+		container.performBackgroundTask { ctx in
+			let fetchRequest: NSFetchRequest<AppSettingsEntity> = NSFetchRequest(entityName: "AppSettingsEntity")
+			
+			do {
+				if let entity = try ctx.fetch(fetchRequest).first {
+					
+					let data = AppSettingsData(uid: entity.uid!, isCmdrMode: entity.isCmdrMode)
+					completion(.success(data))
+					return
+					
+				} else {
+					let entity = AppSettingsEntity(context: ctx)
+					entity.isCmdrMode = false
+					entity.uid = UUID().uuidString
+					try ctx.save()
+					
+					let data = AppSettingsData(uid: entity.uid!, isCmdrMode: false)
+					
+					completion(.success(data))
+				}
+			} catch {
+				print("Error while saving app settings")
+				completion(.failure(.saveFailed))
+			}
+		}
 	}
+	
+	
+	func saveAppSettings(appSettings: AppSettingsData, completion: @escaping (Result<Bool, DbError>) -> Void) {
+		container.performBackgroundTask { ctx in
+			let fetchRequest: NSFetchRequest<AppSettingsEntity> = NSFetchRequest(entityName: "AppSettingsEntity")
+			
+			do {
+				if let entity = try ctx.fetch(fetchRequest).first {
+					entity.isCmdrMode = appSettings.isCmdrMode
+				} else {
+					let entity = AppSettingsEntity(context: ctx)
+					entity.isCmdrMode = appSettings.isCmdrMode
+					entity.uid = UUID().uuidString
+				}
+				try ctx.save()
+				
+				completion(.success(true))
+			} catch {
+				print("Error while saving app settings")
+				completion(.failure(.saveFailed))
+			}
+		}
+	}
+	
+	func getApiEndPointData(completion: @escaping (Result<[ApiEndPointData], DbError>) -> Void) {
+		container.performBackgroundTask { ctx in
+			let fetchRequest: NSFetchRequest<ApiEndPointEntity> = NSFetchRequest(entityName: "ApiEndPointEntity")
+			
+			do {
+				let entities = try ctx.fetch(fetchRequest)
+				
+				let data = entities.map { ApiEndPointData(uid: $0.uid!, ip: $0.ip!) }
+				
+				var map = [String: ApiEndPointData]()
+				for i in 0..<data.count {
+					let item = data[i]
+					map[item.ip] = item
+				}
+				let uniqData = map.map { _, v in return v}
+				
+				completion(.success(uniqData))
+			} catch {
+				print("Error while fetching api endpoint data")
+				completion(.failure(.invalidData))
+			}
+		}
+	}
+	
+	func saveApiEndPoint(data: ApiEndPointData, completion: @escaping (Result<Bool, DbError>) -> Void) {
+		container.performBackgroundTask { ctx in
+			do {
+				let entity = ApiEndPointEntity(context: ctx)
+				entity.ip = data.ip
+				entity.uid = UUID().uuidString
+				try ctx.save()
+				
+				completion(.success(true))
+			} catch {
+				print("Error while saving api endpoint data")
+				completion(.failure(.saveFailed))
+			}
+		}
+	}
+	
+	func deleteApiEndPoint(_ apiEndPointData: ApiEndPointData, completion: @escaping (Result<Bool, DbError>) -> Void) {
+		
+		container.performBackgroundTask { ctx in
+			let ip = apiEndPointData.ip
+			let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "ApiEndPointEntity")
+			fetchRequest.predicate = NSPredicate(format: "%K == %@", "ip", ip)
+			let batchDeleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+			
+			do {
+				try ctx.execute(batchDeleteRequest)
+			} catch {
+				print("Error deleting api endpoint data \(error)")
+				completion(.failure(.unknown))
+				return
+			}
+			
+			completion(.success(true))
+		}
+	}
+	
 	
 	func saveNoteData(_ noteData: NoteData, completion: @escaping (Result<Bool, DbError>) -> Void) {
 		container.performBackgroundTask { ctx in

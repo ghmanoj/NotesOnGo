@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import Lottie
+//import Lottie
 
 struct ContentView: View {
 	@State var layoutType: LayoutType = .takenote
@@ -49,31 +49,31 @@ struct SplashScreen: View {
 	
 	var body: some View {
 		VStack {
-			AnimatedView(show: $show)
-				.frame(height: UIScreen.main.bounds.height / 2)
+//			AnimatedView(show: $show)
+//				.frame(height: UIScreen.main.bounds.height / 2)
 		}
 	}
 }
 
-struct AnimatedView: UIViewRepresentable {
-	
-	@Binding var show: Bool
-	
-	func makeUIView(context: Context) -> AnimationView {
-		let view = AnimationView(name: "splash", bundle: Bundle.main)
-		
-		view.play { (status) in
-			if status {
-				withAnimation(.interactiveSpring(response: 0.7, dampingFraction: 0.8, blendDuration: 0.8)) {
-					show.toggle()
-				}
-			}
-		}
-		
-		return view
-	}
-	
-	func updateUIView(_ uiView: AnimationView, context: Context) {
-		
-	}
-}
+//struct AnimatedView: UIViewRepresentable {
+//
+//	@Binding var show: Bool
+//
+//	func makeUIView(context: Context) -> AnimationView {
+//		let view = AnimationView(name: "splash", bundle: Bundle.main)
+//
+//		view.play { (status) in
+//			if status {
+//				withAnimation(.interactiveSpring(response: 0.7, dampingFraction: 0.8, blendDuration: 0.8)) {
+//					show.toggle()
+//				}
+//			}
+//		}
+//
+//		return view
+//	}
+//
+//	func updateUIView(_ uiView: AnimationView, context: Context) {
+//
+//	}
+//}

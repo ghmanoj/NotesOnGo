@@ -18,4 +18,10 @@ class ObjectUtils {
 	static let utilityApiService = UtilityApiService()
 	
 	static let persistenceController = PersistenceController.shared
+	
+	static let logger  = Logger.shared
+	
+	private init() {
+	}
+	
 }

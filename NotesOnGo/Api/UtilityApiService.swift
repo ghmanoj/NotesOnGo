@@ -9,30 +9,20 @@ import Foundation
 
 
 class UtilityApiService {
-	private static var apiEndPoint = "192.168.1.80"
 	
-	static func setApiEndPoint(_ ip: String) {
-		apiEndPoint = ip
-	}
-	
-	static func getCurrentApiEndPoint() -> String {
-		return apiEndPoint
-	}
-	
-	func performAction(actionType: UtilityActionType, completion: @escaping(Result<Data, NetworkError>) -> Void) {
-		let apiUrl = "http://\(UtilityApiService.apiEndPoint):8081/utilities_local"
+	func performAction(_ endpointIP: String, cmdMessage: CommandMessage, completion: @escaping(Result<Data, NetworkError>) -> Void) {
+		let apiUrl = "http://\(endpointIP):8081/utilities_local"
+		print("Performing tasks in \(apiUrl)")
 		
 		guard let url = URL(string: apiUrl) else {
 			completion(.failure(.badURL))
 			return
 		}
 		
-
-		
 		var jsonData: Data?
 		
 		do {
-			let message = actionToCommandMessage(action: actionType)
+			let message = cmdMessage
 			jsonData = try JSONSerialization.data(withJSONObject: message.getDict(), options: .prettyPrinted)
 		} catch {
 			print("Error \(error)")
@@ -57,16 +47,5 @@ class UtilityApiService {
 				completion(.failure(.unknown))
 			}
 		}.resume()
-	}
-	
-	private func actionToCommandMessage(action: UtilityActionType) -> CommandMessage {
-		switch action {
-			case .logout:
-				return CommandMessage(command: "utility", modifier: "logout")
-			case .lock:
-				return CommandMessage(command: "utility", modifier: "lock")
-			case .status:
-				return CommandMessage(command: "system", modifier: "status")
-		}
 	}
 }
