@@ -6,6 +6,11 @@ Based on the idea I got from youtube video: https://www.youtube.com/watch?v=k_jP
 This app uses key words like title and content to parse title and content of the notes. User is 
 presented with option to save or discard the parsed note. These saved noted can be viewed, edited or deleted on history tab.
 
+Usage:
+When user starts with voice command 'Record' note recording is activated. 
+
+There are also some automation goodies to make life easier like locking your computer with voice when not near with 'utility lock' etc.. if you have nodejs app running in the api endpoint ;-)
+
 ### TODO
 - [x] Speech to Text parser
 - [x] UI and ViewModel seperation
