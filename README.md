@@ -3,11 +3,10 @@
 ## App to take Notes on the Go
 Record notes while on the move so that we don't have to concentrate on typing.
 Based on the idea I got from youtube video: https://www.youtube.com/watch?v=k_jPKGKMojI
-This app uses key words like title and content to parse title and content of the notes. User is 
-presented with option to save or discard the parsed note. These saved noted can be viewed, edited or deleted on history tab.
 
 Usage:
-When user starts with voice command 'Record' note recording is activated. 
+When user starts with voice command 'Record' note recording is activated. And user can save or discard the recording.
+Recording history is also available in History tab.
 
 There are also some automation goodies to make life easier like locking your computer with voice when not near with 'utility lock' etc.. if you have nodejs app running in the api endpoint ;-)
 
