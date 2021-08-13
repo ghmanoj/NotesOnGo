@@ -1,4 +1,5 @@
 /*
+From: https://developer.apple.com/documentation/speech/recognizing_speech_in_live_audio#//apple_ref/doc/uid/TP40017110
 See LICENSE folder for this sample’s licensing information.
 */
 
