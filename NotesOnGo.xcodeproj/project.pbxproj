@@ -33,6 +33,7 @@
 		AFAEEE6D26C232F3003846CE /* AppSettingsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFAEEE6C26C232F3003846CE /* AppSettingsData.swift */; };
 		AFAEEE6F26C25D4C003846CE /* CommandHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFAEEE6E26C25D4C003846CE /* CommandHelper.swift */; };
 		AFAEEE7126C264E8003846CE /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFAEEE7026C264E8003846CE /* Logger.swift */; };
+		AFB65D6426C388AB00DE5D3A /* BackupUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB65D6326C388AB00DE5D3A /* BackupUtils.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -66,6 +67,7 @@
 		AFAEEE6C26C232F3003846CE /* AppSettingsData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettingsData.swift; sourceTree = "<group>"; };
 		AFAEEE6E26C25D4C003846CE /* CommandHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandHelper.swift; sourceTree = "<group>"; };
 		AFAEEE7026C264E8003846CE /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
+		AFB65D6326C388AB00DE5D3A /* BackupUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupUtils.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -141,6 +143,7 @@
 				AF7BD95226BCB1D200E0C1E8 /* ObjectUtils.swift */,
 				AFAEEE6E26C25D4C003846CE /* CommandHelper.swift */,
 				AFAEEE7026C264E8003846CE /* Logger.swift */,
+				AFB65D6326C388AB00DE5D3A /* BackupUtils.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -294,6 +297,7 @@
 				AFAEEE6F26C25D4C003846CE /* CommandHelper.swift in Sources */,
 				AF38019726BA5856008B717D /* NoteData.swift in Sources */,
 				AF38018426BA57D6008B717D /* NotesOnGoApp.swift in Sources */,
+				AFB65D6426C388AB00DE5D3A /* BackupUtils.swift in Sources */,
 				AF7BD95326BCB1D200E0C1E8 /* ObjectUtils.swift in Sources */,
 				AF4BEF7626BCEB4C00CD493D /* AppDbStorage.xcdatamodeld in Sources */,
 				AF7BD94A26BBB07800E0C1E8 /* SettingsViewModel.swift in Sources */,

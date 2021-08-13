@@ -7,18 +7,25 @@
 
 import Foundation
 import Combine
+import SwiftUI
 
 
 class SettingsViewModel: ObservableObject {
 	
 	@Published var isCmdrMode = false
-	
 	@Published var apiEndPointIp = ""
+	
+	@Published var isBackupInProgress = false
+	@Published private(set) var isBackupSuccess = false
+	
+	private(set) var filesToShare: [Any]? = nil
+	
 	@Published private(set) var infoMessage = ""
-
 	@Published private(set) var appSettings = AppSettingsData(isCmdrMode: false)
 	@Published private(set) var apiEndPoints: [ApiEndPointData] = []
 	
+	private let backupUtils = BackupUtils()
+
 	private var persistenceController = ObjectUtils.persistenceController
 	
 	private let ipAddressCheck = NSPredicate(format: "SELF MATCHES[c] %@", ipAddressPattern)
@@ -92,6 +99,7 @@ class SettingsViewModel: ObservableObject {
 			}
 		}
 	}
+	
 	func onCmdrModeToggle() {
 		let settings = AppSettingsData(isCmdrMode: isCmdrMode)
 		
@@ -105,6 +113,40 @@ class SettingsViewModel: ObservableObject {
 		}
 	}
 	
+	
+	func onPerformBackup() {
+		isBackupInProgress.toggle()
+		
+		persistenceController.getNoteData(0) { result in
+			
+			switch result {
+				case .success(let data):
+					self.backupUtils.performBackup(data, completion: self.handleBackupComplete)
+				case .failure(_):
+					print("Error")
+					RunInUiThread {
+						self.isBackupInProgress.toggle()
+						self.isBackupSuccess = false
+					}
+			}
+		}
+	}
+	
+	private func handleBackupComplete(isSuccess: Bool, filesToShare: [Any]?) {
+		print(isSuccess)
+		self.filesToShare = filesToShare!
+		RunInUiThread {
+			self.isBackupInProgress.toggle()
+			self.isBackupSuccess = isSuccess
+			
+			if isSuccess {
+				let av = UIActivityViewController(activityItems: filesToShare!, applicationActivities: nil)
+				UIApplication.shared.windows.first?.rootViewController?.present(av, animated: true, completion: nil)
+			}
+		}
+	}
+
+	
 	private func showErrorMessage(_ message: String) {
 		RunInUiThread {
 			self.infoMessage = message
@@ -113,5 +155,4 @@ class SettingsViewModel: ObservableObject {
 			}
 		}
 	}
-	
 }

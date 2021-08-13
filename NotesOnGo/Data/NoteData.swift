@@ -8,7 +8,7 @@
 import Foundation
 
 
-struct NoteData {
+struct NoteData: Codable {
 	let uid: UUID
 	let content: String
 	let timestamp: Date

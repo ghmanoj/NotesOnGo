@@ -10,7 +10,7 @@ presented with option to save or discard the parsed note. These saved noted can 
 - [x] Speech to Text parser
 - [x] UI and ViewModel seperation
 - [x] Support for CoreData for saving notes
-- [ ] First: Implementation of notes record saving feature in local iPhone storage.
+- [x] First: Implementation of notes record saving feature in local iPhone storage.
 - [ ] Second: Add cloud saving feature for notes (like github or google drive etc)
 
 ### Demo

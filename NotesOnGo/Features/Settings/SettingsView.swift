@@ -10,8 +10,9 @@ import SwiftUI
 // MARK: - Settings View
 struct SettingsView: View {
 	private let logger = ObjectUtils.logger
-
+	
 	@ObservedObject private var viewModel = ObjectUtils.settingsViewModel
+	
 	
 	var body: some View {
 		VStack(alignment: .leading, spacing: 20) {
@@ -23,8 +24,32 @@ struct SettingsView: View {
 				}
 				.font(.title2)
 				.padding(.bottom)
-						
-			if viewModel.isCmdrMode {
+			
+			HStack {
+				Button(action: {
+					if !viewModel.isBackupInProgress {
+						viewModel.onPerformBackup()
+					} else {
+						print("Backup already in progress. Ignoring this request..")
+					}
+				}) {
+					Text("Backup")
+						.frame(maxWidth: .infinity)
+				}
+				.padding(.vertical)
+				.foregroundColor(.white)
+				.background(viewModel.isBackupInProgress ? Color.red.opacity(0.5) : Color.red)
+				
+				.cornerRadius(10)
+			}
+			.frame(maxWidth: .infinity, alignment: .center)
+			.padding(.vertical)
+			
+			Spacer(minLength: 0)
+			
+			if viewModel.isBackupInProgress {
+				BackupAnimationView(isInProgress: $viewModel.isBackupInProgress)
+			} else if viewModel.isCmdrMode {
 				VStack(alignment: .leading, spacing: 5) {
 					HStack {
 						TextField("Add endpoint. Ex: 192.168.1.1", text: $viewModel.apiEndPointIp)
@@ -50,7 +75,7 @@ struct SettingsView: View {
 						.frame(maxWidth: .infinity, alignment: .leading)
 						.frame(height: 20)
 						.padding(.bottom, 10)
-											
+					
 					Divider()
 					
 					Text("Api endpoints")
@@ -65,7 +90,7 @@ struct SettingsView: View {
 							handleSwipe(indexSet)
 						}
 					}
-					.frame(maxWidth: .infinity, maxHeight: 250, alignment: .leading)
+					.frame(maxWidth: .infinity, alignment: .leading)
 				}
 			}
 			
@@ -92,5 +117,38 @@ struct SettingsView: View {
 struct SettingsView_Previews: PreviewProvider {
 	static var previews: some View {
 		SettingsView()
+	}
+}
+
+
+struct BackupAnimationView: View {
+	@Binding var isInProgress: Bool
+	@State var viewShowing: Bool = false
+	
+	private var animatingGear: Animation {
+		Animation.linear(duration: 1)
+			.repeatForever(autoreverses: false)
+	}
+	
+	var body: some View {
+		VStack {
+			Text("Backup in progress...")
+				.font(.title2)
+				.padding(.bottom)
+			
+			Image(systemName: "gear")
+				.resizable()
+				.aspectRatio(contentMode: .fit)
+				.frame(width: 80, height: 80)
+				.rotationEffect(.degrees( (isInProgress && viewShowing) ? 360 : 0 ))
+				.animation((isInProgress && viewShowing) ? animatingGear : .default)
+				.onAppear {
+					self.viewShowing = true
+				}
+				.onDisappear {
+					self.viewShowing = false
+				}
+		}
+		.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
 	}
 }
