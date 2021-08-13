@@ -14,10 +14,10 @@ presented with option to save or discard the parsed note. These saved noted can 
 - [ ] Second: Add cloud saving feature for notes (like github or google drive etc)
 
 ### Demo
-<img src="https://github.com/ghmanoj/NotesOnGo/blob/74a64c8d0f61991bee670d943145d4d5153719b3/demo/1.PNG" width=180 align=left>
-<img src="https://github.com/ghmanoj/NotesOnGo/blob/74a64c8d0f61991bee670d943145d4d5153719b3/demo/1_1.PNG" width=180 align=left>
-<img src="https://github.com/ghmanoj/NotesOnGo/blob/74a64c8d0f61991bee670d943145d4d5153719b3/demo/2.PNG" width=180 align=left>
-<img src="https://github.com/ghmanoj/NotesOnGo/blob/74a64c8d0f61991bee670d943145d4d5153719b3/demo/2_1.PNG" width=180 align=left>
-<img src="https://github.com/ghmanoj/NotesOnGo/blob/74a64c8d0f61991bee670d943145d4d5153719b3/demo/2_2.PNG" width=180 align=left>
+<img src="https://github.com/ghmanoj/NotesOnGo/blob/8487146b4b1e1fb0ef39f9f6b5d694c33bb158fa/demo/1.PNG" width=180 align=left>
+<img src="https://github.com/ghmanoj/NotesOnGo/blob/8487146b4b1e1fb0ef39f9f6b5d694c33bb158fa/demo/2.PNG" width=180 align=left>
+<img src="https://github.com/ghmanoj/NotesOnGo/blob/8487146b4b1e1fb0ef39f9f6b5d694c33bb158fa/demo/3.PNG" width=180 align=left>
+<img src="https://github.com/ghmanoj/NotesOnGo/blob/8487146b4b1e1fb0ef39f9f6b5d694c33bb158fa/demo/4.PNG" width=180 align=left>
+<img src="https://github.com/ghmanoj/NotesOnGo/blob/8487146b4b1e1fb0ef39f9f6b5d694c33bb158fa/demo/5.PNG" width=180 align=left>
 
 
