@@ -14,6 +14,7 @@ struct SettingsView: View {
 	
 	@ObservedObject private var viewModel = ObjectUtils.settingsViewModel
 	
+	@State var apiInputActive = false
 	
 	var body: some View {
 		VStack(alignment: .leading, spacing: 20) {
@@ -53,18 +54,43 @@ struct SettingsView: View {
 			} else if viewModel.isCmdrMode {
 				VStack(alignment: .leading, spacing: 5) {
 					HStack {
-						TextField("Add endpoint. Ex: 192.168.1.1", text: $viewModel.apiEndPointIp)
-							.disableAutocorrection(true)
-							.autocapitalization(.none)
-							.padding(8)
-							.border(Color.secondary.opacity(0.1))
+						HStack {
+							TextField(
+								"Add endpoint. Eg: 192.168.1.1",
+								text: $viewModel.apiEndPointIp,
+								onEditingChanged: { focused in
+									if focused {
+										withAnimation {
+											apiInputActive = true
+										}
+									}
+								})
+								.disableAutocorrection(true)
+								.autocapitalization(.none)
+							
+							if apiInputActive {
+								Button(action: {
+									withAnimation {
+										apiInputActive = false
+									}
+									
+									UIApplication.shared.endEditing() // Call to dismiss keyboard
+								}) {
+									Image(systemName: "multiply.circle.fill")
+										.foregroundColor(.secondary)
+								}
+							}
+						}
+						.padding(10)
+						.border(Color.secondary.opacity(0.1))
+						
 						Button(action: {
 							viewModel.onSetApiEndPoint()
 						}) {
 							Text("Add")
 						}
 						.padding(.horizontal, 14)
-						.padding(.vertical, 8)
+						.padding(.vertical, 10)
 						.foregroundColor(.white)
 						.background(appAccentColor)
 						.cornerRadius(8)
@@ -118,13 +144,8 @@ struct SettingsView: View {
 
 
 
-struct SettingsView_Previews: PreviewProvider {
-	static var previews: some View {
-		SettingsView()
-	}
-}
 
-
+// MARK: - Backup Animation View when backup button is pressed
 struct BackupAnimationView: View {
 	@Binding var isInProgress: Bool
 	@State var viewShowing: Bool = false

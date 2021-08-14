@@ -10,6 +10,7 @@ import SwiftUI
 // MARK: - Bottom Bar Button
 struct NavButton: View {
 	@Environment(\.appAccentColor) var appAccentColor
+	@State var animate: Bool = false
 	
 	let image: String
 	let label: String
@@ -18,19 +19,23 @@ struct NavButton: View {
 	@Binding var layoutType: LayoutType
 
 	var body: some View {
-		VStack {
-			Image(systemName: image)
-				.resizable()
-				.aspectRatio(contentMode: .fit)
-				.frame(width: 30, height: 30)
-				.font(.title)
-				.foregroundColor((layoutType == type) ? appAccentColor : .secondary)
-				.onTapGesture {
-					generateHepaticFeedback()
-					layoutType = type
-				}
-			Text(label)
-				.font(.callout)
+		
+		Button(action: {
+			layoutType = type
+		}) {
+			VStack {
+				Image(systemName: image)
+					.resizable()
+					.aspectRatio(contentMode: .fit)
+					.frame(width: 30, height: 30)
+					.font(.title)
+					.foregroundColor((layoutType == type) ? appAccentColor : .secondary)
+					.transition(AnyTransition.slide)
+				
+				Text(label)
+					.font(.callout)
+					.foregroundColor((layoutType == type) ? appAccentColor : .secondary)
+			}
 		}
 	}
 }
