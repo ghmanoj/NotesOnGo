@@ -22,6 +22,7 @@
 		AF3801A926BB5F55008B717D /* TopBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3801A826BB5F55008B717D /* TopBar.swift */; };
 		AF4BEF7326BCEA6C00CD493D /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4BEF7226BCEA6C00CD493D /* Persistence.swift */; };
 		AF4BEF7626BCEB4C00CD493D /* AppDbStorage.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = AF4BEF7426BCEB4C00CD493D /* AppDbStorage.xcdatamodeld */; };
+		AF78673126C7796B00BA1524 /* BackupSuccessPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF78673026C7796B00BA1524 /* BackupSuccessPresenter.swift */; };
 		AF7BD93F26BB8E5400E0C1E8 /* SpeechRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF7BD93E26BB8E5400E0C1E8 /* SpeechRecognizer.swift */; };
 		AF7BD94126BB9A8900E0C1E8 /* UtilityApiService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF7BD94026BB9A8900E0C1E8 /* UtilityApiService.swift */; };
 		AF7BD94326BB9AA700E0C1E8 /* UtilityModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF7BD94226BB9AA700E0C1E8 /* UtilityModels.swift */; };
@@ -55,6 +56,7 @@
 		AF4B0DAC26BE1B6E00A01986 /* AppDbStorageV2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = AppDbStorageV2.xcdatamodel; sourceTree = "<group>"; };
 		AF4BEF7226BCEA6C00CD493D /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		AF4BEF7526BCEB4C00CD493D /* AppDbStorage.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = AppDbStorage.xcdatamodel; sourceTree = "<group>"; };
+		AF78673026C7796B00BA1524 /* BackupSuccessPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupSuccessPresenter.swift; sourceTree = "<group>"; };
 		AF7BD93E26BB8E5400E0C1E8 /* SpeechRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeechRecognizer.swift; sourceTree = "<group>"; };
 		AF7BD94026BB9A8900E0C1E8 /* UtilityApiService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityApiService.swift; sourceTree = "<group>"; };
 		AF7BD94226BB9AA700E0C1E8 /* UtilityModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityModels.swift; sourceTree = "<group>"; };
@@ -200,6 +202,7 @@
 			children = (
 				AF3801A626BA5C9B008B717D /* SettingsView.swift */,
 				AF7BD94926BBB07800E0C1E8 /* SettingsViewModel.swift */,
+				AF78673026C7796B00BA1524 /* BackupSuccessPresenter.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -295,6 +298,7 @@
 				AF7BD94126BB9A8900E0C1E8 /* UtilityApiService.swift in Sources */,
 				AF7BD95726BCB25000E0C1E8 /* NoteHistoryViewModel.swift in Sources */,
 				AFAEEE6F26C25D4C003846CE /* CommandHelper.swift in Sources */,
+				AF78673126C7796B00BA1524 /* BackupSuccessPresenter.swift in Sources */,
 				AF38019726BA5856008B717D /* NoteData.swift in Sources */,
 				AF38018426BA57D6008B717D /* NotesOnGoApp.swift in Sources */,
 				AFB65D6426C388AB00DE5D3A /* BackupUtils.swift in Sources */,

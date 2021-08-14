@@ -10,12 +10,12 @@ import Foundation
 class BackupUtils {
 	
 	func performBackup(_ data: [NoteData], completion: @escaping (Bool, [Any]?) -> Void) {
-		let backupFileName = "NotesOnGo_\(Date().formatDateForFileName()).bck"
+		let backupFileName = "NotesOnGo_\(Date().formatDateForFileName()).json"
 
 		let dir = NSURL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(backupFileName)
 		
 		DispatchQueue.global(qos: .userInitiated).async {
-			sleep(3)
+			sleep(2)
 			
 			do {
 				let encoder = JSONEncoder()

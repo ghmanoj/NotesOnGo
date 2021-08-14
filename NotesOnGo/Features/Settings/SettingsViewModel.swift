@@ -16,7 +16,7 @@ class SettingsViewModel: ObservableObject {
 	@Published var apiEndPointIp = ""
 	
 	@Published var isBackupInProgress = false
-	@Published private(set) var isBackupSuccess = false
+	@Published var isBackupSuccess = false
 	
 	private(set) var filesToShare: [Any]? = nil
 	
@@ -133,16 +133,10 @@ class SettingsViewModel: ObservableObject {
 	}
 	
 	private func handleBackupComplete(isSuccess: Bool, filesToShare: [Any]?) {
-		print(isSuccess)
 		self.filesToShare = filesToShare!
 		RunInUiThread {
-			self.isBackupInProgress.toggle()
 			self.isBackupSuccess = isSuccess
-			
-			if isSuccess {
-				let av = UIActivityViewController(activityItems: filesToShare!, applicationActivities: nil)
-				UIApplication.shared.windows.first?.rootViewController?.present(av, animated: true, completion: nil)
-			}
+			self.isBackupInProgress.toggle()
 		}
 	}
 

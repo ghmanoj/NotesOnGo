@@ -10,6 +10,7 @@ import SwiftUI
 // MARK: - Settings View
 struct SettingsView: View {
 	private let logger = ObjectUtils.logger
+	@Environment(\.appAccentColor) var appAccentColor: Color
 	
 	@ObservedObject private var viewModel = ObjectUtils.settingsViewModel
 	
@@ -38,7 +39,7 @@ struct SettingsView: View {
 				}
 				.padding(.vertical)
 				.foregroundColor(.white)
-				.background(viewModel.isBackupInProgress ? Color.red.opacity(0.5) : Color.red)
+				.background(viewModel.isBackupInProgress ? appAccentColor.opacity(0.5) : appAccentColor)
 				
 				.cornerRadius(10)
 			}
@@ -65,13 +66,13 @@ struct SettingsView: View {
 						.padding(.horizontal, 14)
 						.padding(.vertical, 8)
 						.foregroundColor(.white)
-						.background(Color.red)
+						.background(appAccentColor)
 						.cornerRadius(8)
 					}
 					
 					Text(viewModel.infoMessage)
 						.font(.caption2)
-						.foregroundColor(.red.opacity(0.8))
+						.foregroundColor(appAccentColor.opacity(0.8))
 						.frame(maxWidth: .infinity, alignment: .leading)
 						.frame(height: 20)
 						.padding(.bottom, 10)
@@ -95,6 +96,9 @@ struct SettingsView: View {
 			}
 			
 			Spacer(minLength: 0)
+		}
+		.sheet(isPresented: $viewModel.isBackupSuccess) {
+			BackupSuccessPresenter(activityItems: viewModel.filesToShare!)
 		}
 		.onAppear {
 			viewModel.fetchAppSettings()
