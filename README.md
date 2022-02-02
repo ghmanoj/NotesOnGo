@@ -8,8 +8,6 @@ Usage:
 When user starts with voice command 'Record' note recording is activated. And user can save or discard the recording.
 Recording history is also available in History tab.
 
-There are also some automation goodies to make life easier like locking your computer with voice when not near with 'utility lock' etc.. if you have nodejs app running in the api endpoint ;-)
-
 ### TODO
 - [x] Speech to Text parser
 - [x] UI and ViewModel seperation
