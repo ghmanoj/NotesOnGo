@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		AF17A4E526C0EE7F008351F4 /* splash.json in Resources */ = {isa = PBXBuildFile; fileRef = AF17A4E426C0EE7F008351F4 /* splash.json */; };
 		AF38018426BA57D6008B717D /* NotesOnGoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF38018326BA57D6008B717D /* NotesOnGoApp.swift */; };
 		AF38018626BA57D6008B717D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF38018526BA57D6008B717D /* ContentView.swift */; };
 		AF38018826BA57D6008B717D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AF38018726BA57D6008B717D /* Assets.xcassets */; };
@@ -22,6 +21,7 @@
 		AF3801A926BB5F55008B717D /* TopBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3801A826BB5F55008B717D /* TopBar.swift */; };
 		AF4BEF7326BCEA6C00CD493D /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4BEF7226BCEA6C00CD493D /* Persistence.swift */; };
 		AF4BEF7626BCEB4C00CD493D /* AppDbStorage.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = AF4BEF7426BCEB4C00CD493D /* AppDbStorage.xcdatamodeld */; };
+		AF66E1C127DE6A9B00734420 /* CommonResources.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF66E1C027DE6A9B00734420 /* CommonResources.swift */; };
 		AF78673126C7796B00BA1524 /* BackupSuccessPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF78673026C7796B00BA1524 /* BackupSuccessPresenter.swift */; };
 		AF7BD93F26BB8E5400E0C1E8 /* SpeechRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF7BD93E26BB8E5400E0C1E8 /* SpeechRecognizer.swift */; };
 		AF7BD94126BB9A8900E0C1E8 /* UtilityApiService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF7BD94026BB9A8900E0C1E8 /* UtilityApiService.swift */; };
@@ -38,7 +38,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		AF17A4E426C0EE7F008351F4 /* splash.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = splash.json; sourceTree = "<group>"; };
 		AF38018026BA57D6008B717D /* NotesOnGo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NotesOnGo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AF38018326BA57D6008B717D /* NotesOnGoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesOnGoApp.swift; sourceTree = "<group>"; };
 		AF38018526BA57D6008B717D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -56,6 +55,7 @@
 		AF4B0DAC26BE1B6E00A01986 /* AppDbStorageV2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = AppDbStorageV2.xcdatamodel; sourceTree = "<group>"; };
 		AF4BEF7226BCEA6C00CD493D /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		AF4BEF7526BCEB4C00CD493D /* AppDbStorage.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = AppDbStorage.xcdatamodel; sourceTree = "<group>"; };
+		AF66E1C027DE6A9B00734420 /* CommonResources.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonResources.swift; sourceTree = "<group>"; };
 		AF78673026C7796B00BA1524 /* BackupSuccessPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupSuccessPresenter.swift; sourceTree = "<group>"; };
 		AF7BD93E26BB8E5400E0C1E8 /* SpeechRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeechRecognizer.swift; sourceTree = "<group>"; };
 		AF7BD94026BB9A8900E0C1E8 /* UtilityApiService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityApiService.swift; sourceTree = "<group>"; };
@@ -102,7 +102,6 @@
 		AF38018226BA57D6008B717D /* NotesOnGo */ = {
 			isa = PBXGroup;
 			children = (
-				AF17A4E426C0EE7F008351F4 /* splash.json */,
 				AF38019526BA581E008B717D /* Api */,
 				AF38019426BA57FD008B717D /* Data */,
 				AF38019326BA57F9008B717D /* Utils */,
@@ -146,6 +145,7 @@
 				AFAEEE6E26C25D4C003846CE /* CommandHelper.swift */,
 				AFAEEE7026C264E8003846CE /* Logger.swift */,
 				AFB65D6326C388AB00DE5D3A /* BackupUtils.swift */,
+				AF66E1C027DE6A9B00734420 /* CommonResources.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -268,7 +268,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AF17A4E526C0EE7F008351F4 /* splash.json in Resources */,
 				AF38018B26BA57D6008B717D /* Preview Assets.xcassets in Resources */,
 				AF38018826BA57D6008B717D /* Assets.xcassets in Resources */,
 			);
@@ -287,6 +286,7 @@
 				AF7BD94726BBA97F00E0C1E8 /* Utilities.swift in Sources */,
 				AF38019C26BA5911008B717D /* BottomNavBar.swift in Sources */,
 				AF3801A726BA5C9B008B717D /* SettingsView.swift in Sources */,
+				AF66E1C127DE6A9B00734420 /* CommonResources.swift in Sources */,
 				AF3801A426BA5B38008B717D /* NoteHistoryView.swift in Sources */,
 				AF38018626BA57D6008B717D /* ContentView.swift in Sources */,
 				AFAEEE6D26C232F3003846CE /* AppSettingsData.swift in Sources */,

@@ -12,27 +12,24 @@ class ActionCommandHelper {
 	private let utilityApiService = ObjectUtils.utilityApiService
 	private let logger = ObjectUtils.logger
 	
-	func perform(msg: String, on endPoints: [ApiEndPointData]) {
+  func perform(msg: String, on endPoints: [ApiEndPointData], callback: @escaping (CommandResponse) -> Void) {
 		// sanity check
 		if !msg.starts(with: "system") && !msg.starts(with: "utility") {
 			print("Action should start with ^System or ^Utility")
 			return
 		}
-		
-		logger.i(msg)
-		
 
 		if msg.starts(with: "system") {
-			handleSystemCmdAction(msg, endPoints)
+      handleSystemCmdAction(msg, endPoints, callback: callback)
 		} else if msg.starts(with: "utility") {
-			handleUtilityCmdAction(msg, endPoints)
+      handleUtilityCmdAction(msg, endPoints, callback: callback)
 		} else {
 			print("Does not match system or utility")
 			return
 		}
 	}
 	
-	private func handleSystemCmdAction(_ msg: String, _ endPoints: [ApiEndPointData]) {
+  private func handleSystemCmdAction(_ msg: String, _ endPoints: [ApiEndPointData], callback: @escaping (CommandResponse) -> Void) {
 		var recording = msg
 
 		guard let cmdEndIdx = recording.firstIndex(of: " ") else {
@@ -54,17 +51,17 @@ class ActionCommandHelper {
 		} else if recording.starts(with: "update") {
 			tmp = CommandMessage(command: "system", modifier: "update")
 		} else {
-			print(recording)
+			print("Unknown command \(recording)")
 			return
 		}
 		
 		let cmdMessage = tmp!
 		DispatchQueue.global(qos: .userInitiated).async {
-			self.executeCommandOnEndpoints(cmdMessage, endPoints)
+			self.executeCommandOnEndpoints(cmdMessage, endPoints, callback: callback)
 		}
 	}
 	
-	private func handleUtilityCmdAction(_ msg: String, _ endPoints: [ApiEndPointData]) {
+	private func handleUtilityCmdAction(_ msg: String, _ endPoints: [ApiEndPointData], callback: @escaping (CommandResponse) -> Void) {
 		var recording = msg
 
 		guard let cmdEndIdx = recording.firstIndex(of: " ") else {
@@ -85,6 +82,8 @@ class ActionCommandHelper {
 			tmp = CommandMessage(command: "utility", modifier: "lock")
 		} else if recording.starts(with: "logout") || recording.starts(with: "log out") {
 			tmp = CommandMessage(command: "utility", modifier: "logout")
+    } else if recording.starts(with: "mailbox") {
+      tmp = CommandMessage(command: "utility", modifier: "mailbox")
 		} else {
 			print(recording)
 			return
@@ -92,11 +91,11 @@ class ActionCommandHelper {
 		
 		let cmdMessage = tmp!
 		DispatchQueue.global(qos: .userInitiated).async {
-			self.executeCommandOnEndpoints(cmdMessage, endPoints)
+      self.executeCommandOnEndpoints(cmdMessage, endPoints, callback: callback)
 		}
 	}
 	
-	private func executeCommandOnEndpoints(_ cmdMessage: CommandMessage, _ endPoints: [ApiEndPointData]) {
+	private func executeCommandOnEndpoints(_ cmdMessage: CommandMessage, _ endPoints: [ApiEndPointData], callback: @escaping (CommandResponse) -> Void) {
 		if endPoints.count == 0 {
 			return
 		}
@@ -106,7 +105,8 @@ class ActionCommandHelper {
 				switch result{
 					case .success(let data):
 						do {
-							print("Exexuted \(cmdMessage) on \(ip). Received: \(try utilCmdResponseParser(data))")
+              let resp = try utilCmdResponseParser(data);
+              callback(resp);
 						} catch {
 							print("Error while parsing response")
 						}

@@ -25,6 +25,7 @@ enum UtilityActionType {
 
 
 struct CommandResponse: Codable {
+  let type: String
 	let message: String
 	let status: Bool
 }

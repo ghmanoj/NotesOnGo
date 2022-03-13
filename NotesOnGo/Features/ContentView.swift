@@ -9,50 +9,50 @@ import SwiftUI
 //import Lottie
 
 struct ContentView: View {
-	@State var layoutType: LayoutType = .takenote
-	@State var title: String = "Take Note"
-	@State var splashScreen = false
-	
-	var body: some View {
-		if splashScreen {
-			SplashScreen(show: $splashScreen)
-		} else {
-			VStack {
-				TopBar(layoutType: $layoutType)
-				
-				switch layoutType {
-					case .takenote:
-						TakeNoteView()
-					case .history:
-						NoteHistoryView()
-					case .settings:
-						SettingsView()
-				}
-				
-				Spacer(minLength: 0)
-				
-				BottomNavBar(layoutType: $layoutType)
-			}
-			.padding()
-		}
-	}
+  @State var layoutType: LayoutType = .takenote
+  @State var title: String = "Take Note"
+  @State var splashScreen = false
+  
+  var body: some View {
+    if splashScreen {
+      SplashScreen(show: $splashScreen)
+    } else {
+      VStack {
+        TopBar(layoutType: $layoutType)
+        
+        switch layoutType {
+        case .takenote:
+          TakeNoteView()
+        case .history:
+          NoteHistoryView()
+        case .settings:
+          SettingsView()
+        }
+        
+        Spacer(minLength: 0)
+        
+        BottomNavBar(layoutType: $layoutType)
+      }
+      .padding()
+    }
+  }
 }
 
 struct ContentView_Previews: PreviewProvider {
-	static var previews: some View {
-		ContentView()
-	}
+  static var previews: some View {
+    ContentView()
+  }
 }
 
 struct SplashScreen: View {
-	@Binding var show: Bool
-	
-	var body: some View {
-		VStack {
-//			AnimatedView(show: $show)
-//				.frame(height: UIScreen.main.bounds.height / 2)
-		}
-	}
+  @Binding var show: Bool
+  
+  var body: some View {
+    VStack {
+      //			AnimatedView(show: $show)
+      //				.frame(height: UIScreen.main.bounds.height / 2)
+    }
+  }
 }
 
 //struct AnimatedView: UIViewRepresentable {

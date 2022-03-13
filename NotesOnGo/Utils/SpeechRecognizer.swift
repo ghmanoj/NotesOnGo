@@ -9,7 +9,7 @@ import Speech
 import SwiftUI
 
 
-/// A helper for transcribing speech to text using AVAudioEngine.
+// A helper for transcribing speech to text using AVAudioEngine.
 struct SpeechRecognizer {
 	let greeting: String
 	
@@ -91,7 +91,7 @@ struct SpeechRecognizer {
 		}
 	}
 	
-	/// Stop transcribing audio.
+	// Stop transcribing audio.
 	func stopRecording() {
 		assistant.reset()
 	}
