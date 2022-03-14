@@ -25,12 +25,13 @@ const availableCommands = {
 	'system:status': 'uptime'
 }
 
+
 function getAppropriateCommand(message) {
 	let keys = Object.keys(message);
 	let values = Object.values(message);
 
 	if (keys.length !== 2 || values.length !== 2) {
-		return undefined
+		return null
 	}
 
 	let cmdPath = `${message['command']}:${message['modifier']}`;
@@ -38,25 +39,12 @@ function getAppropriateCommand(message) {
 	return availableCommands[cmdPath];
 }
 
-app.post("/utilities_local", async (req, res) => {
-	let message = req.body
-	console.log("Got request at /utilities_local, message: %j", message);
-	
-	let cmd = getAppropriateCommand(message)
-	if (cmd === undefined || cmd === null) {
-		res.send({'type':'Unknown', 'message': 'Invalid command message', 'status': false });
-		return;
-    } else {
-        if (cmd === 'mailbox') {
-            checkMailBoxAndRespond(res);
-        } else {
-            executeAndRespond(cmd, res);
-        }
-    }
-});
+function sendErrorResponse(res, cmdType, message) {
+    res.send({'type': cmdType, 'message': message, 'status': false});
+}
 
-function respondHelp(cmd, res) {
-    res.send({'type':'help', 'message': cmd, 'status': true});
+function sendSuccessResponse(res, cmdType, message) {
+    res.send({'type': cmdType, 'message': message, 'status': true});
 }
 
 function checkMailBoxAndRespond(res) {
@@ -68,28 +56,34 @@ function checkMailBoxAndRespond(res) {
     } else {
         if (USPS_USR && USPS_PW) {
             (async () => {
-                const browser = await puppeteer.launch({
-                    headless: false,
-                    executablePath: "/Applications/Brave Browser.app/Contents/MacOS/Brave Browser"
-                });
-                const page = await browser.newPage();
-                await page.goto('https://reg.usps.com/entreg/LoginAction_input?app=Phoenix&appURL=https://www.usps.com/');
-                await page.type('#username', USPS_USR);
-                await page.type('#password', USPS_PW);
-                await page.click('#btn-submit');
-                await page.waitForNavigation();
-                await page.goto('https://informeddelivery.usps.com/box/pages/secure/DashboardAction_input.action?restart=1')
-    
-                let text = await page.evaluate(() => Array.from(document.querySelectorAll('#cp_week li'), element => element.textContent));
-                text = text.map((value) => String(value.trim()));
-                await browser.close();
-    
-                MailBoxCache[today] = text;
+                try {
+                    const browser = await puppeteer.launch({
+                        headless: false,
+                        executablePath: "/Applications/Brave Browser.app/Contents/MacOS/Brave Browser"
+                    });
+                    const page = await browser.newPage();
+                    await page.goto('https://reg.usps.com/entreg/LoginAction_input?app=Phoenix&appURL=https://www.usps.com/');
+                    await page.type('#username', USPS_USR);
+                    await page.type('#password', USPS_PW);
+                    await page.click('#btn-submit');
+                    await page.waitForNavigation();
+                    await page.goto('https://informeddelivery.usps.com/box/pages/secure/DashboardAction_input.action?restart=1')
+        
+                    let text = await page.evaluate(() => Array.from(document.querySelectorAll('#cp_week li'), element => element.textContent));
+                    text = text.map((value) => String(value.trim()));
+                    await browser.close();
+        
+                    MailBoxCache[today] = text;
 
-                parseAndRespond(res, today, MailBoxCache);
+                    parseAndRespond(res, today, MailBoxCache);
+                } catch(ex) {
+                    console.log(ex);
+                    sendErrorResponse(res, 'mailbox', 'Error while fetching data from USPS');
+                }
               })();
         } else {
-            res.send({'type':'mailbox', 'message': 'Something is not right', 'status': false });
+            console.log("Environment variables `USPS_USR` and/or `USPS_PW` are not properly set.");
+            sendErrorResponse(res, 'mailbox', 'Something is not right');
         }
     }
 }
@@ -97,17 +91,17 @@ function checkMailBoxAndRespond(res) {
 function parseAndRespond(res, key, map) {
     let mailsToday = map[key].filter((itm) => itm.startsWith("Today"));
 
-    if (mailsToday != null) {
+    if (mailsToday) {
         var match = MAIL_COUNT_REGEX.exec(mailsToday);
-        if (match != null) {
-            res.send({'type':'mailbox', 'message': `USPS Mails Today: ${match[1]}`, 'status': true});
+        if (match) {
+            sendSuccessResponse(res, 'mailbox', `USPS Mails Today: ${match[1]}`)
         } else {
             console.log(`Mails count match failed. ${mailsToday}`);
-            res.send({'type':'mailbox', 'message': 'Something is not right', 'status': false});
+            sendErrorResponse(res, 'mailbox', 'Something is not right');
         }
     } else {
         console.log("Mails today is null");
-        res.send({'type':'mailbox', 'message': 'Something is not right.', 'status': false});
+        sendErrorResponse(res, 'mailbox', 'Something is not right');
     }
 }
 
@@ -115,16 +109,36 @@ function parseAndRespond(res, key, map) {
 function executeAndRespond(cmd, res) {
 	exec(cmd, (error, stdout, stderr) => {
 		if (error) {
-			res.send({'type':'cmd', 'message': `${error}`, 'status': false });
-			return;
-		}
-		if (stderr) {
-			res.send({'type':'cmd', 'message': `${stderr}`, 'status': false });
-			return;
-		}
-		res.send({'type':'cmd', 'message': `${stdout.trim()}`, 'status': true });
+            sendErrorResponse(res, cmd, `${error}`);
+		} else if (stderr) {
+            sendErrorResponse(res, cmd, `${stderr}`);
+		} else {
+            sendSuccessResponse(res, cmd, `${stdout.trim()}`);
+        }
 	});
 }
+
+
+
+/*
+    express related things from here...
+*/
+
+app.post("/utilities_local", async (req, res) => {
+	let message = req.body
+	console.log("Got request at /utilities_local, message: %j", message);
+	
+	let cmd = getAppropriateCommand(message)
+	if (!cmd) {
+		res.send({'type':'Unknown', 'message': 'Invalid command message', 'status': false });
+    } else {
+        if (cmd === 'mailbox') {
+            checkMailBoxAndRespond(res);
+        } else {
+            executeAndRespond(cmd, res);
+        }
+    }
+});
 
 
 app.listen(PORT, () => {
