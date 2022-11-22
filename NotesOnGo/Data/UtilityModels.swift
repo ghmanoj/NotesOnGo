@@ -49,3 +49,16 @@ struct CommandMessage: Codable {
 enum DbError: Error {
 	case saveFailed, invalidData, unknown
 }
+
+
+enum RecordingType {
+  case unknown, note, command
+  
+  var description: String {
+    switch self {
+    case .unknown: return "Unknown"
+    case .command: return "Command"
+    case .note: return "Note"
+    }
+  }
+}

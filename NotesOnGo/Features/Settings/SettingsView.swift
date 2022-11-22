@@ -19,7 +19,7 @@ struct SettingsView: View {
   var body: some View {
     VStack(alignment: .leading, spacing: 20) {
       
-      Toggle("Cmdr Mode", isOn: $viewModel.isCmdrMode)
+      Toggle("Command Mode", isOn: $viewModel.isCmdrMode)
         .onChange(of: viewModel.isCmdrMode) { value in
           logger.i("\(value)")
           viewModel.onCmdrModeToggle()
@@ -106,7 +106,7 @@ struct SettingsView: View {
           
           Divider()
           
-          Text("Api endpoints")
+          Text("Endpoints")
             .font(.caption2)
             .foregroundColor(.secondary)
           

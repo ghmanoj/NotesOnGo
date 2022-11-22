@@ -40,45 +40,58 @@ struct TakeNoteView: View {
           .onTapGesture {
             viewModel.onMicButtonPress()
           }
-          .popover(isPresented: $viewModel.isCmdrResponse) {
-            Text(viewModel.cmdrResponseText)
-              .font(.title)
-              .padding()
-          }
       }
       .frame(maxWidth: .infinity)
       
       Spacer(minLength: 0)
       
-      if !viewModel.noteContent.isEmpty {
+      
+      if viewModel.recordingType != .unknown {
         VStack(alignment: .leading, spacing: 10) {
           
-          VStack(spacing: 10) {
-            Text("Note Recording")
-              .foregroundColor(.secondary)
-              .font(.caption2)
-            Text(viewModel.noteContent)
-              .font(.title3)
-          }
-          .frame(maxWidth: .infinity, alignment: .center)
-          
-          HStack(spacing: 40) {
-            Button(action: {
-              viewModel.onSaveNote()
-              generateHepaticFeedback()
-            }) {
-              Text("Save")
-            }
+          if viewModel.recordingType == .note && !viewModel.noteContent.isEmpty {
             
-            Button(action: {
-              viewModel.onDiscardNote()
-              generateHepaticFeedback()
-            }) {
-              Text("Discard")
+            VStack(spacing: 10) {
+              Text("Recorded Note")
+                .foregroundColor(.secondary)
+                .font(.caption)
+              Text(viewModel.noteContent)
+                .font(.title3)
             }
+            .frame(maxWidth: .infinity, alignment: .center)
+            
+            HStack(spacing: 40) {
+              Button(action: {
+                viewModel.onSaveNote()
+                generateHepaticFeedback()
+              }) {
+                Text("Save")
+              }
+              
+              Button(action: {
+                viewModel.onDiscardNote()
+                generateHepaticFeedback()
+              }) {
+                Text("Discard")
+              }
+            }
+            .padding()
+            .frame(maxWidth: .infinity)
+  
+          } else if viewModel.recordingType == .command && viewModel.isCmdrResponse {
+            VStack(spacing: 10) {
+              Text("Response Message")
+                .foregroundColor(.secondary)
+                .font(.caption)
+              Text(viewModel.cmdrResponseText)
+                .font(.title3)
+                .padding(.top, 20)
+              
+              Spacer(minLength: 0)
+            }
+            .frame(maxWidth: .infinity, alignment: .center)
+            .padding(.top, 30)
           }
-          .padding()
-          .frame(maxWidth: .infinity)
         }
         .padding(.bottom)
       }

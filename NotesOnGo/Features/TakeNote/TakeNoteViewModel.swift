@@ -19,6 +19,8 @@ class TakeNoteViewModel: ObservableObject {
   
   @Published private(set) var cmdrResponseText = ""
   
+  @Published private(set) var recordingType: RecordingType = .unknown
+  
   @Published var isCmdrResponse = false
   
   
@@ -46,6 +48,8 @@ class TakeNoteViewModel: ObservableObject {
   func onMicButtonPress() {
     isRecording.toggle()
     noteContent = ""
+    recordingType = .unknown
+    cmdrResponseText = ""
     
     if isRecording {
       speechRecognizer.record { message in
@@ -93,8 +97,12 @@ class TakeNoteViewModel: ObservableObject {
     
     if isCmdrModeActive && (msg.starts(with: "system") || msg.starts(with: "utility")) {
       print("Performing Cmdr Api Calls... Message string is: \(msg)")
+      recordingType = .command
+      
       handleCmdrApiCall(msg)
     } else {
+      recordingType = .note
+      
       handleRecordCommand()
     }
   }

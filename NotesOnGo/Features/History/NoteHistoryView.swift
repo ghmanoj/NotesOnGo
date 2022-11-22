@@ -132,7 +132,7 @@ struct NoteHistoryDetail: View {
           }) {
             Text("Cancel")
           }
-          .padding(3)
+          .padding(EdgeInsets(top: 3, leading: 5, bottom: 3, trailing: 5))
           .background(Color.black)
           .cornerRadius(5)
         }
@@ -157,7 +157,7 @@ struct NoteHistoryDetail: View {
         }) {
           Text(isEditMode ? "Update" : "Edit")
         }
-        .padding(3)
+        .padding(EdgeInsets(top: 3, leading: 5, bottom: 3, trailing: 5))
         .background(isEditMode ? Color.green : Color.blue)
         .cornerRadius(5)
         
