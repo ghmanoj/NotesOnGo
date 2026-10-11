@@ -24,7 +24,7 @@ struct TakeNoteView: View {
       
       VStack(alignment:.center, spacing: 10) {
         
-        Text(viewModel.isRecording ? viewModel.liveRecordingUpdates : viewModel.infoMessage)
+        Text(viewModel.isRecording && !viewModel.liveRecordingUpdates.isEmpty ? viewModel.liveRecordingUpdates : viewModel.infoMessage)
           .foregroundColor(viewModel.isRecording ? .primary : .secondary)
           .font(.callout)
           .frame(maxWidth: .infinity, alignment: .top)
@@ -40,6 +40,14 @@ struct TakeNoteView: View {
           .onTapGesture {
             viewModel.onMicButtonPress()
           }
+          .allowsHitTesting(!viewModel.isFinishing)
+
+        if viewModel.isFinishing {
+          ProgressView()
+        }
+        if viewModel.isCommandReady {
+          Button("Run command") { viewModel.onRunCommand() }
+        }
       }
       .frame(maxWidth: .infinity)
       
@@ -98,6 +106,9 @@ struct TakeNoteView: View {
     }
     .onAppear {
       viewModel.fetchAppSettings()
+    }
+    .onDisappear {
+      viewModel.cancelRecording()
     }
     .padding()
   }

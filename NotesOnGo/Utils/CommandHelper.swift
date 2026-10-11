@@ -1,119 +1,48 @@
-//
-//  CommandHelper.swift
-//  NotesOnGo
-//
-//  Created by Manoj Ghimire on 8/10/21.
-//
-
 import Foundation
 
+final class ActionCommandHelper {
+  private let utilityApiService = ObjectUtils.utilityApiService
 
-class ActionCommandHelper {
-	private let utilityApiService = ObjectUtils.utilityApiService
-	private let logger = ObjectUtils.logger
-	
+  static func parse(_ text: String) -> CommandMessage? {
+    let words = text.lowercased().components(separatedBy: CharacterSet.alphanumerics.inverted)
+      .filter { !$0.isEmpty }
+    let phrase = words.joined(separator: " ")
+    switch phrase {
+    case "system status": return CommandMessage(command: "system", modifier: "status")
+    case "system update": return CommandMessage(command: "system", modifier: "update")
+    case "utility lock": return CommandMessage(command: "utility", modifier: "lock")
+    case "utility logout", "utility log out": return CommandMessage(command: "utility", modifier: "logout")
+    case "utility mailbox", "utility mail box": return CommandMessage(command: "utility", modifier: "mailbox")
+    default: return nil
+    }
+  }
+
+  static func canRunAutomatically(_ text: String) -> Bool {
+    guard let command = parse(text) else { return false }
+    return (command.command == "system" && command.modifier == "status") ||
+      (command.command == "utility" && command.modifier == "mailbox")
+  }
+
   func perform(msg: String, on endPoints: [ApiEndPointData], callback: @escaping (CommandResponse) -> Void) {
-		// sanity check
-		if !msg.starts(with: "system") && !msg.starts(with: "utility") {
-			print("Action should start with ^System or ^Utility")
-			return
-		}
-
-		if msg.starts(with: "system") {
-      handleSystemCmdAction(msg, endPoints, callback: callback)
-		} else if msg.starts(with: "utility") {
-      handleUtilityCmdAction(msg, endPoints, callback: callback)
-		} else {
-			print("Does not match system or utility")
-			return
-		}
-	}
-	
-  private func handleSystemCmdAction(_ msg: String, _ endPoints: [ApiEndPointData], callback: @escaping (CommandResponse) -> Void) {
-		var recording = msg
-
-		guard let cmdEndIdx = recording.firstIndex(of: " ") else {
-			return
-		}
-		
-		// this removes system tag
-		var startIdx = recording.startIndex
-		recording.removeSubrange(startIdx..<cmdEndIdx)
-		recording.removeFirst()
-		
-		// get action tag now
-		startIdx = recording.startIndex
-	
-		var tmp: CommandMessage?
-		
-		if recording.starts(with: "status") {
-			tmp = CommandMessage(command: "system", modifier: "status")
-		} else if recording.starts(with: "update") {
-			tmp = CommandMessage(command: "system", modifier: "update")
-		} else {
-			print("Unknown command \(recording)")
-			return
-		}
-		
-		let cmdMessage = tmp!
-		DispatchQueue.global(qos: .userInitiated).async {
-			self.executeCommandOnEndpoints(cmdMessage, endPoints, callback: callback)
-		}
-	}
-	
-	private func handleUtilityCmdAction(_ msg: String, _ endPoints: [ApiEndPointData], callback: @escaping (CommandResponse) -> Void) {
-		var recording = msg
-
-		guard let cmdEndIdx = recording.firstIndex(of: " ") else {
-			return
-		}
-		
-		// this removes system tag
-		var startIdx = recording.startIndex
-		recording.removeSubrange(startIdx..<cmdEndIdx)
-		recording.removeFirst()
-		
-		// get action tag now
-		startIdx = recording.startIndex
-	
-		var tmp: CommandMessage?
-		
-		if recording.starts(with: "lock") {
-			tmp = CommandMessage(command: "utility", modifier: "lock")
-		} else if recording.starts(with: "logout") || recording.starts(with: "log out") {
-			tmp = CommandMessage(command: "utility", modifier: "logout")
-    } else if recording.starts(with: "mailbox") {
-      tmp = CommandMessage(command: "utility", modifier: "mailbox")
-		} else {
-			print(recording)
-			return
-		}
-		
-		let cmdMessage = tmp!
-		DispatchQueue.global(qos: .userInitiated).async {
-      self.executeCommandOnEndpoints(cmdMessage, endPoints, callback: callback)
-		}
-	}
-	
-	private func executeCommandOnEndpoints(_ cmdMessage: CommandMessage, _ endPoints: [ApiEndPointData], callback: @escaping (CommandResponse) -> Void) {
-		if endPoints.count == 0 {
-			return
-		}
-		for idx in 0..<endPoints.count {
-			let ip = endPoints[idx].ip
-			utilityApiService.performAction(ip, cmdMessage: cmdMessage) { result in
-				switch result{
-					case .success(let data):
-						do {
-              let resp = try utilCmdResponseParser(data);
-              callback(resp);
-						} catch {
-							print("Error while parsing response")
-						}
-					case .failure(_):
-						print("Failed to perform action")
-				}
-			}
-		}
-	}
+    guard let command = Self.parse(msg) else {
+      callback(CommandResponse(type: "Unknown", message: "Command not recognized", status: false))
+      return
+    }
+    guard !endPoints.isEmpty else {
+      callback(CommandResponse(type: "Unknown", message: "Add a backend address in Settings", status: false))
+      return
+    }
+    // URLSession starts all endpoints concurrently; no extra dispatch hop is needed.
+    for endpoint in endPoints {
+      utilityApiService.performAction(endpoint.ip, cmdMessage: command) { result in
+        switch result {
+        case .success(let data):
+          do { callback(try JSONDecoder().decode(CommandResponse.self, from: data)) }
+          catch { callback(CommandResponse(type: "Unknown", message: "Invalid backend response", status: false)) }
+        case .failure:
+          callback(CommandResponse(type: "Unknown", message: "Could not reach \(endpoint.ip)", status: false))
+        }
+      }
+    }
+  }
 }

@@ -1,51 +1,47 @@
-//
-//  UtilityApiService.swift
-//  NotesOnGo
-//
-//  Created by Manoj Ghimire on 8/4/21.
-//
-
 import Foundation
 
+final class UtilityApiService {
+  private let session: URLSession
 
-class UtilityApiService {
-	
-	func performAction(_ endpointIP: String, cmdMessage: CommandMessage, completion: @escaping(Result<Data, NetworkError>) -> Void) {
-		let apiUrl = "http://\(endpointIP):8081/utilities_local"
-		print("Performing tasks in \(apiUrl)")
-		
-		guard let url = URL(string: apiUrl) else {
-			completion(.failure(.badURL))
-			return
-		}
-		
-		var jsonData: Data?
-		
-		do {
-			let message = cmdMessage
-			jsonData = try JSONSerialization.data(withJSONObject: message.getDict(), options: .prettyPrinted)
-		} catch {
-			print("Error \(error)")
-			completion(.failure(.messageError))
-			return
-		}
-		
-		var request = URLRequest(url: url)
-	
-		//HTTP Headers
-		request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-		request.setValue("application/json", forHTTPHeaderField: "Accept")
-		request.httpMethod = "POST"
-		request.httpBody = jsonData
+  init(session: URLSession? = nil) {
+    if let session = session {
+      self.session = session
+    } else {
+      let configuration = URLSessionConfiguration.ephemeral
+      configuration.waitsForConnectivity = false
+      configuration.requestCachePolicy = .reloadIgnoringLocalCacheData
+      configuration.timeoutIntervalForRequest = 12
+      configuration.timeoutIntervalForResource = 130
+      let callbacks = OperationQueue()
+      callbacks.qualityOfService = .userInitiated
+      self.session = URLSession(configuration: configuration, delegate: nil, delegateQueue: callbacks)
+    }
+  }
 
-		URLSession.shared.dataTask(with: request) { data, response, error in
-			if let data = data {
-				completion(.success(data))
-			} else if error != nil {
-				completion(.failure(.requestFailed))
-			} else {
-				completion(.failure(.unknown))
-			}
-		}.resume()
-	}
+  func performAction(_ endpointIP: String, cmdMessage: CommandMessage,
+                     completion: @escaping (Result<Data, NetworkError>) -> Void) {
+    guard let url = URL(string: "http://\(endpointIP):8081/utilities_local") else {
+      completion(.failure(.badURL))
+      return
+    }
+    var request = URLRequest(url: url)
+    request.httpMethod = "POST"
+    request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+    request.setValue("application/json", forHTTPHeaderField: "Accept")
+    // USPS browser fetches have a longer server-side deadline than local commands.
+    request.timeoutInterval = cmdMessage.modifier == "mailbox" ? 130 : 12
+    do { request.httpBody = try JSONEncoder().encode(cmdMessage) }
+    catch {
+      completion(.failure(.messageError))
+      return
+    }
+    session.dataTask(with: request) { data, response, error in
+      guard error == nil, let response = response as? HTTPURLResponse,
+            (200..<300).contains(response.statusCode), let data = data else {
+        completion(.failure(.requestFailed))
+        return
+      }
+      completion(.success(data))
+    }.resume()
+  }
 }
